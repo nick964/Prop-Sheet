@@ -2,9 +2,9 @@
 
 import { Alert, ProgressBar, Modal, Button, Stack, Form} from "react-bootstrap";
 
-export const metadata = {
-    title: 'Submit Your Prop Sheet',
-  }
+// export const metadata = {
+//     title: 'Submit Your Prop Sheet',
+//   }
 export default function Page() {
 
 

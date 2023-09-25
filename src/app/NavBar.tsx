@@ -19,7 +19,7 @@ export default function NavBar() {
                     <Nav>
                         <Nav.Link as={Link} href="/static" active={pathname === "/static"}>Static</Nav.Link>
                         <Nav.Link as={Link} href="/dynamic" active={pathname === "/dynamic"}>Dynamic</Nav.Link>
-                        <Nav.Link as={Link} href="/login" active={pathname === "/login"}>Login</Nav.Link>
+                        <Nav.Link as={Link} href="/api/auth/signin/credentials" active={pathname === "/login"}>Login</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
