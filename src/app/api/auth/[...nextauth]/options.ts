@@ -34,5 +34,14 @@ export const options: NextAuthOptions = {
             clientId: process.env.FACEBOOK_CLIENT_ID as string,
             clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string
         })
-    ]
+    ],
+    callbacks: {
+        async signIn(user, account, profile) {
+            console.log("SIGN IN");
+            console.log(user);
+            console.log(account);
+            console.log(profile);
+            return true;
+        }
+    },
 }
