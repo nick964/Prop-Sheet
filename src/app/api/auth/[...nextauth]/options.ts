@@ -41,7 +41,24 @@ export const options: NextAuthOptions = {
             console.log(user);
             console.log(account);
             console.log(profile);
-            return true;
+            const response = await axios.post(
+                process.env.NEXT_PUBLIC_API_BASE_URL + "/users/exists?email=" + profile?.email
+              );
+              if (response && response.data?.value === true) {
+                return true;
+              } else {
+                const data = {
+                  firstName: profile.given_name,
+                  lastName: profile.family_name,
+                  email: profile.email,
+                  profileUrl: profile.picture,
+                };
+                const response = await axios.post(
+                  process.env.NEXT_PUBLIC_API_BASE_URL + "/auth/signup",
+                  data
+                );
+                return true;
+              }
         }
     },
 }
