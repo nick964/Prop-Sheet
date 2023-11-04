@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { signIn } from 'next-auth/react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
@@ -11,7 +12,24 @@ interface SignUpFormValues {
   password: string;
 }
 
-const SignUpForm: React.FC = () => {
+export default function Component(props: any) {
+ 
+  const groupId = props.groupId ?? '';
+  console.log('logging groupId from signup-form.tsx');
+  console.log(groupId);
+  
+  const handleSignIn = async (provider: string, groupId: string) => {
+    console.log('logging groupId handle sign in');
+    console.log(groupId);
+    await signIn(provider,  { groupId: groupId });
+  }
+
+
+  const sanityCheck = () => {
+    console.log('what is going on');
+  }
+
+  console.log(groupId);
   const initialValues: SignUpFormValues = {
     firstName: '',
     lastName: '',
@@ -33,6 +51,7 @@ const SignUpForm: React.FC = () => {
   };
 
   return (
+    <div>
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
       <Form>
         <div className="mb-3">
@@ -72,7 +91,18 @@ const SignUpForm: React.FC = () => {
         </button>
       </Form>
     </Formik>
+    
+         <button onClick={() => handleSignIn('facebook', groupId)}>
+            Sign up with Facebook
+          </button>
+          <button onClick={() => handleSignIn('twitter', groupId)}>
+            Sign up with Twitter
+          </button>
+          <button onClick={() => sanityCheck()}>
+            Sign up with Google
+          </button>
+
+
+    </div>
   );
 };
-
-export default SignUpForm;

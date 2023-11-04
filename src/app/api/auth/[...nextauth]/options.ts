@@ -3,6 +3,48 @@ import GoogleProvider from "next-auth/providers/google";
 import TwitterProvider from "next-auth/providers/twitter";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { cookies } from 'next/headers'
+
+async function login(credentials: { username: string, password: string }) {
+    try {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(credentials)
+        };
+        console.log('calling this url');
+        console.log(`${process.env.BACKEND_URL}api/auth/signin`);
+        const response = await fetch(`${process.env.BACKEND_URL}api/auth/signin`, requestOptions);
+        const data = await response.json();
+        console.log(JSON.stringify(data));
+        return data;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+async function oauthlogin(credentials: { username: string }) {
+    try {
+        console.log('oauthlogin');
+        console.log(credentials);
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(credentials)
+        };
+        console.log('calling this url');
+        console.log(`${process.env.BACKEND_URL}api/auth/oauth-register`);
+        const response = await fetch(`${process.env.BACKEND_URL}api/auth/oauth-register`, requestOptions);
+        const data = await response.json();
+        console.log(JSON.stringify(data));
+        return data;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
 
 export const options: NextAuthOptions = {
     providers: [
@@ -13,7 +55,11 @@ export const options: NextAuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                const user = { id: 1, name: "J Smith", email: "test"};
+                const creds = {username : credentials?.username, password: credentials?.password};
+                const user = await login(creds);
+                console.log('user');
+                console.log(user);
+                
                 if (user) {
                     return user;
                 } else {
@@ -36,29 +82,28 @@ export const options: NextAuthOptions = {
         })
     ],
     callbacks: {
-        async signIn(user, account, profile) {
-            console.log("SIGN IN");
+        async signIn({user, account, profile}) {
+            const cookieStore = cookies();
+            const theme = cookieStore.get('groupId');
+            console.log("USER");
             console.log(user);
+            console.log("ACCOUNT");
             console.log(account);
+            console.log("PROFILE");
             console.log(profile);
-            const response = await axios.post(
-                process.env.NEXT_PUBLIC_API_BASE_URL + "/users/exists?email=" + profile?.email
-              );
-              if (response && response.data?.value === true) {
-                return true;
-              } else {
-                const data = {
-                  firstName: profile.given_name,
-                  lastName: profile.family_name,
-                  email: profile.email,
-                  profileUrl: profile.picture,
-                };
-                const response = await axios.post(
-                  process.env.NEXT_PUBLIC_API_BASE_URL + "/auth/signup",
-                  data
-                );
-                return true;
-              }
+            const credentials = {
+                username : profile?.data?.username,
+            };
+            console.log('log credentials');
+            console.log(credentials);
+
+            const returnedUser = await oauthlogin(credentials);
+            console.log('user');
+            console.log(user);
+            console.log('returnedUser');
+            console.log(returnedUser);
+
+            return true;
         }
     },
 }

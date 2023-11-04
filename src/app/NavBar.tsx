@@ -17,9 +17,11 @@ export default function NavBar() {
                 <Navbar.Toggle aria-controls="main-navbar" />
                 <Navbar.Collapse id="main-navbar">
                     <Nav>
-                        <Nav.Link as={Link} href="/static" active={pathname === "/static"}>Static</Nav.Link>
-                        <Nav.Link as={Link} href="/dynamic" active={pathname === "/dynamic"}>Dynamic</Nav.Link>
+                        <Nav.Link as={Link} href="/profile" active={pathname === "/profile"}>Profile</Nav.Link>
                         <Nav.Link as={Link} href="/api/auth/signin/credentials" active={pathname === "/login"}>Login</Nav.Link>
+                        <Nav.Link as={Link} href="/signup" active={pathname === "/signup"}>Signup</Nav.Link>
+                        <Nav.Link as={Link} href="/create-group" active={pathname === "/create-group"}>Create New Group</Nav.Link>
+                        <Nav.Link as={Link} href="/submit" active={pathname === "/submit"}>Enter Submission</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
