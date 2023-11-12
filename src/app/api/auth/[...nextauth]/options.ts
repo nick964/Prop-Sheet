@@ -7,6 +7,7 @@ import { cookies } from 'next/headers'
 
 async function login(credentials: { username: string, password: string }) {
     try {
+        console.log('IN CREDENTIALS LOGIN');
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -34,8 +35,8 @@ async function oauthlogin(credentials: { username: string }) {
             body: JSON.stringify(credentials)
         };
         console.log('calling this url');
-        console.log(`${process.env.BACKEND_URL}api/auth/oauth-register`);
-        const response = await fetch(`${process.env.BACKEND_URL}api/auth/oauth-register`, requestOptions);
+        console.log(`${process.env.BACKEND_URL}/api/auth/oauth-register`);
+        const response = await fetch(`${process.env.BACKEND_URL}/api/auth/oauth-register`, requestOptions);
         const data = await response.json();
         console.log(JSON.stringify(data));
         return data;
@@ -91,19 +92,41 @@ export const options: NextAuthOptions = {
             console.log(account);
             console.log("PROFILE");
             console.log(profile);
-            const credentials = {
-                username : profile?.data?.username,
-            };
-            console.log('log credentials');
-            console.log(credentials);
 
-            const returnedUser = await oauthlogin(credentials);
             console.log('user');
             console.log(user);
-            console.log('returnedUser');
-            console.log(returnedUser);
 
             return true;
-        }
+        },
+        async jwt({ token, user, account, profile }) {
+            console.log('now im in jwt');
+            console.log('JWT');
+            console.log(token);
+            console.log(user);
+            console.log(account);
+            console.log(profile);
+            if (!token.accessToken) {
+                const credentials = {
+                    username: token?.email || 'default-username',
+                };
+                console.log('log credentials');
+                console.log(credentials);
+
+                const returnedUser = await oauthlogin(credentials);
+                console.log('returnedUser');
+                console.log(returnedUser);
+                if (returnedUser) {
+                    token.accessToken = returnedUser.token;
+                    token.refreshToken = returnedUser.refreshToken;
+                }
+            }
+            return token;
+        },
+        async session({ session, token, user }) {
+            // Send properties to the client, like an access_token and user id from a provider.
+            session.accessToken = token.accessToken;
+            
+            return session
+          }
     },
 }
