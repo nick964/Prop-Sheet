@@ -35,8 +35,8 @@ async function oauthlogin(credentials: { username: string }) {
             body: JSON.stringify(credentials)
         };
         console.log('calling this url');
-        console.log(`${process.env.BACKEND_URL}/api/auth/oauth-register`);
-        const response = await fetch(`${process.env.BACKEND_URL}/api/auth/oauth-register`, requestOptions);
+        console.log(`${process.env.BACKEND_URL}api/auth/oauth-register`);
+        const response = await fetch(`${process.env.BACKEND_URL}api/auth/oauth-register`, requestOptions);
         const data = await response.json();
         console.log(JSON.stringify(data));
         return data;
@@ -99,15 +99,20 @@ export const options: NextAuthOptions = {
             return true;
         },
         async jwt({ token, user, account, profile }) {
-            console.log('now im in jwt');
-            console.log('JWT');
-            console.log(token);
-            console.log(user);
-            console.log(account);
-            console.log(profile);
-            if (!token.accessToken) {
+            // console.log('now im in jwt');
+            // console.log('JWT');
+            // console.log(token);
+            // console.log(user);
+            // console.log(account);
+            // console.log(profile);
+            if (user != null && !token.accessToken) {
+                console.log('CALLING OAUTH NOW');
                 const credentials = {
                     username: token?.email || 'default-username',
+                    name: token.name,
+                    email: token.email,
+                    provider: account?.provider,
+
                 };
                 console.log('log credentials');
                 console.log(credentials);
@@ -124,9 +129,9 @@ export const options: NextAuthOptions = {
         },
         async session({ session, token, user }) {
             // Send properties to the client, like an access_token and user id from a provider.
-            session.accessToken = token.accessToken;
+            session.user.accessToken = token.accessToken;
             
-            return session
+            return session;
           }
     },
 }
