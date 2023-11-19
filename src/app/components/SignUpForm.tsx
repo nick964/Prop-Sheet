@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Container, Col, Row, Button} from "react-bootstrap";
 import * as Yup from 'yup';
 import { signIn } from 'next-auth/react';
 
@@ -61,10 +62,11 @@ const SignUpForm: React.FC = (props) => {
   };
 
   return (
-    <div>
-      <h1>Sign Up</h1>
-
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+    <Container>
+      <Row className="justify-content-md-center mt-5">
+        <Col md={6}>
+          <h1>Sign Up</h1>
+          <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
       <Form>
         <div className="mb-3">
           <label htmlFor="firstName" className="form-label">
@@ -105,20 +107,22 @@ const SignUpForm: React.FC = (props) => {
         </button>
       </Form>
     </Formik>
-      <div>
-        <h2>Or sign up with</h2>
 
-        <button onClick={() => handleSignIn('facebook', groupId) }>
-            Sign up with Facebook
-          </button>
-          <button onClick={() => handleSignIn('twitter', groupId)}>
-            Sign up with Twitter
-          </button>
-          <button onClick={() => handleSignIn('google', groupId)}>
-            Sign up with Google
-          </button>
-      </div>
-    </div>
+          <div id="OauthSigninOptions" className="mt-4">
+            <h2>Or sign up with</h2>
+            <Button variant="outline-primary" onClick={() => handleSignIn('facebook', groupId)}>
+              Sign up with Facebook
+            </Button>
+            <Button variant="outline-info" onClick={() => handleSignIn('twitter', groupId)}>
+              Sign up with Twitter
+            </Button>
+            <Button variant="outline-danger" onClick={() => handleSignIn('google', groupId)}>
+              Sign up with Google
+            </Button>
+          </div>
+        </Col>
+      </Row>
+    </Container>
 
   );
 };

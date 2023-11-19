@@ -44,3 +44,13 @@ a {
 img {
   background-color: lightblue;
 }
+
+/* Add this CSS to your stylesheets or use a styled-components approach */
+.modal-content {
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.modal-content-exit {
+  opacity: 0;
+}

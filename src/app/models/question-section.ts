@@ -1,14 +1,14 @@
 export interface QuestionSection {
     id: number,
     name: string
+    questions: Question[]
 }
 
 export interface Question {
     id: number,
     text: string,
-    section: QuestionSection,
     questionType: string,
-    lineValue: number,
+    lineValue: number | null,
     options: string[]
 }
 
