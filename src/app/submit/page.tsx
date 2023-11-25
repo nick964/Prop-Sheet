@@ -1,10 +1,15 @@
 "use client";
 
-import  { useState } from 'react';
+import  { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { Alert, ProgressBar, Modal, Button, Stack, Form, Spinner} from "react-bootstrap";
 import { QuestionSection } from "../models/question-section";
 import { Formik } from 'formik';
 import styles from './SubmitComponent.module.css';
+
+interface SubmitPageProps {
+  groupId: string;
+}
 
 const Questionnaire = ({ data }) => {
   const [showModal, setShowModal] = useState(true);
@@ -12,6 +17,9 @@ const Questionnaire = ({ data }) => {
   const [userResponses, setUserResponses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sectionError, setSectionError] = useState<string | null>(null);
+  const { data: session, status } = useSession();
+  const accessToken = session?.user?.accessToken;
+
 
   const handleResponse = (questionId: any, response: any) => {
     setUserResponses((prevResponses) => {
@@ -34,7 +42,7 @@ const Questionnaire = ({ data }) => {
     return missingResponses;
   };
 
-  const mapToAnswers = async () => {--
+  const mapToAnswers = async () => {
     const answers: AnswerDto[] = [];
     for(let i = 0; i < userResponses.length; i++) {
       for(let j = 0; j < data[i].questions.length; j++) {
@@ -50,6 +58,7 @@ const Questionnaire = ({ data }) => {
 
   const handleNextSection = async (formik: any) => {
     const missingResponses = validateResponses(userResponses, currentSection);
+    console.log(accessToken);
 
     if (missingResponses.length > 0) {
       const errMsg = 'Please fill out all questions before proceeding to the next section';
@@ -62,11 +71,17 @@ const Questionnaire = ({ data }) => {
         await handleSubmit();
         setShowModal(false); // Close the modal after submitting
       } else {
+        await handleSubmit();
         setSectionError(null);
         setCurrentSection((prevSection) => prevSection + 1);
       }
     }
   };
+
+  const submitCurrentSelections = async (submissions: any) => {
+    console.log('Submitting current selections', submissions);
+    await handleSubmit();
+  }
 
   const handlePreviousSection = () => {
     if(currentSection > 0) {
@@ -88,14 +103,19 @@ const Questionnaire = ({ data }) => {
     const answers = await mapToAnswers();
     console.log('Submitting:', answers);
 
+    const submissionRequest = {
+      groupId: 1,
+      answers: answers
+    }
+
     try {
+      console.log('hitting this url');
+      console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}members/submit`);
       // Assuming you have an endpoint to handle the user's responses
-      const response = await fetch('https://your-api-endpoint.com', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}members/submit`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userResponses }),
+        headers: { 'Authorization': `Bearer ${accessToken}`},
+        body: JSON.stringify( submissionRequest ),
       });
 
       if (response.ok) {
@@ -113,9 +133,10 @@ const Questionnaire = ({ data }) => {
     }
   };
 
-  const currentSectionData = data[currentSection];
+  const currentSectionData = data == null ? true : data[currentSection];
   const isFirstSection = currentSection === 0;
    // Calculate progress percentage
+   
    const progress = ((currentSection + 1) / data.length) * 100;
 
   return (
@@ -176,10 +197,50 @@ const Questionnaire = ({ data }) => {
   );
 };
 
-const ExampleComponent = () => {
-  const jsonData: QuestionSection[] = [{"id":2,"name":"Game Points","questions":[{"id":1,"text":"1st Quarter","questionType":"radio","lineValue":5.5,"options":["O","U"]},{"id":2,"text":"2nd Quarter","questionType":"radio","lineValue":null,"options":["O","U"]},{"id":3,"text":"3rd Quarter","questionType":"radio","lineValue":null,"options":["O","U"]},{"id":4,"text":"4th Quarter","questionType":"radio","lineValue":null,"options":["O","U"]}]},{"id":3,"name":"National Anthem","questions":[{"id":5,"text":"Heads or Tails","questionType":"radio","lineValue":null,"options":["Y","N"]},{"id":6,"text":"Winner of Coin Toss","questionType":"radio","lineValue":null,"options":["Y","N"]}]},{"id":4,"name":"Halftime","questions":[{"id":7,"text":"First Song \"Umbrella\"","questionType":"radio","lineValue":null,"options":["Y","N"]},{"id":8,"text":"Last Song Diamonds","questionType":"radio","lineValue":null,"options":["Y","N"]}]},{"id":5,"name":"Yes or No Propositions","questions":[{"id":9,"text":"Will Mary J. Blige Perform First?","questionType":"radio","lineValue":null,"options":["Y","N"]},{"id":10,"text":"Will Eminem Sing “Lose Yourself”?","questionType":"radio","lineValue":null,"options":["Y","N"]},{"id":11,"text":"Will Snoop Dogg Smoke and Sing “The Next Episode”?","questionType":"radio","lineValue":null,"options":["Y","N"]},{"id":12,"text":"Will Kendrick Lamar Sing “HUMBLE”?","questionType":"radio","lineValue":null,"options":["Y","N"]},{"id":13,"text":"Will Dr. Dre Sing “California Love”?","questionType":"radio","lineValue":null,"options":["Y","N"]},{"id":14,"text":"Will the First Commercial Break Contain a Car Commercial?","questionType":"radio","lineValue":null,"options":["Y","N"]},{"id":15,"text":"Will a Cheetos Commercial Appear Before a Pringles Commercial?","questionType":"radio","lineValue":null,"options":["Y","N"]},{"id":16,"text":"Will a Captain Morgan Commercial Appear Before a BMW Commercial?","questionType":"radio","lineValue":null,"options":["Y","N"]}]}];
+const ExampleComponent: React.FC<SubmitPageProps> = ({ groupId }) => {
+  const { data: session, status } = useSession();
+  const accessToken = session?.user?.accessToken;
+  console.log('loggin session details in signed up form');
+  console.log(JSON.stringify(session));
 
-  return <Questionnaire data={jsonData} />;
+  const [questions, setQuestions] = useState<QuestionSection[] | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (accessToken) {
+          // Assuming you have an API endpoint that requires authentication
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${accessToken}`}
+        };
+        console.log('calling this url for question data');
+        console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}questions/all`);
+        console.log(requestOptions);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}questions/all`, requestOptions);
+
+          if (response.ok) {
+            const result: QuestionSection[] = await response.json();
+            console.log('logging result for questions');
+            console.log(result);
+            setQuestions(result);
+          } else {
+            console.error('Failed to fetch data from the API');
+          }
+        } 
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+    }, []);
+
+  if(status === 'loading' || questions == null) {
+    return <div>Loading...</div>;
+  }
+  
+  return <Questionnaire data={questions} />;
 };
 
 export default ExampleComponent;

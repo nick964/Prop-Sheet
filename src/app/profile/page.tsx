@@ -1,13 +1,16 @@
 'use client'
 
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import  { useEffect, useState } from 'react';
 import { ProfileResponse } from '../models/profile-response';
-
+import { Container, Alert, Button} from "react-bootstrap";
+import ProfileComponent from '../components/ProfileComponent';
 
 export default  function Page() {
 
 const { data: session, status } = useSession();
+const router = useRouter();
 console.log('loggin session details');
 console.log(JSON.stringify(session));
 
@@ -17,14 +20,10 @@ const [profileResponse, setProfileResponse] = useState<ProfileResponse | null>(n
 const accessToken = session?.user?.accessToken;
 
 console.log(status);
-
-console.log('right before useEffect');
 useEffect(() => {
-    console.log('inside use effect');
     const fetchData = async () => {
       try {
-        console.log('inside try');
-        if (session) {
+        if (accessToken) {
           // Assuming you have an API endpoint that requires authentication
         const requestOptions = {
             method: 'GET',
@@ -43,7 +42,7 @@ useEffect(() => {
           } else {
             console.error('Failed to fetch data from the API');
           }
-        }
+        } 
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -53,37 +52,16 @@ useEffect(() => {
     fetchData();
     }, []);
 
-console.log('loggin profile response');
-console.log(profileResponse);
-console.log('Logging all of this after my declaration of use efefct');
 
-if (typeof window !== 'undefined') {
-    // Client-side code
-    console.log('Running on the client');
-  } else {
-    // Server-side code
-    console.log('Running on the server');
-  }
 
 if(session) {
     return (
         <div>
-            <div>
-                Logged in as {session?.user?.name}
-            </div>
-            <div>
-                Access token is {session?.user?.accessToken}
-            </div>
-            <div>
-                Access token is {profileResponse?.members}
-            </div>
-            
-            <div>
                 {profileResponse ? (
-               <h2>Got data</h2>
+                  <ProfileComponent profileData={profileResponse} />
                 ) : (
                 <div>Loading..</div>)}
-            </div>
+
 
         </div>
 
@@ -91,9 +69,14 @@ if(session) {
 }
 
 return (
-    <div>
-        <button >Sign In</button>
-    </div>
+  <Container className="d-flex align-items-center justify-content-center" style={{ height: '100vh' }}>
+    <Alert variant="info" className="text-center">
+      <p>You need to sign in to access this page.</p>
+      <Button variant="primary" onClick={() => router.push('/api/auth/signin/credentials')}>
+        Sign In
+      </Button>
+    </Alert>
+  </Container>
 )
 
 }

@@ -14,6 +14,7 @@ interface Member {
     submission_status: string | null;
     score: number | null;
     groupDto: GroupDto;
+    icon: string | null;
   }
 
 export interface ProfileResponse {

@@ -36,7 +36,11 @@ const SignUpForm: React.FC = (props) => {
   const handleSignIn = async (provider: string, groupId: string) => {
     console.log('logging groupId handle sign in');
     console.log(groupId);
-    await signIn(provider, { callbackUrl: `http://localhost:3000/signup?groupid=${groupId}` });
+    var myCallbackUrl = 'http://localhost:3000/signedup';
+    if(groupId) {
+      myCallbackUrl = myCallbackUrl + '?groupid=' + groupId;
+    }
+    await signIn(provider, { callbackUrl: myCallbackUrl });
   }
 
   const handleSubmit = async (values: SignUpFormValues, { resetForm }: { resetForm: () => void }) => {
