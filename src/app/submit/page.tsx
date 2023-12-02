@@ -114,7 +114,10 @@ const Questionnaire = ({ data }) => {
       // Assuming you have an endpoint to handle the user's responses
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}members/submit`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${accessToken}`},
+        headers: { 
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify( submissionRequest ),
       });
 

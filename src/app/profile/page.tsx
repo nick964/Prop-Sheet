@@ -36,8 +36,6 @@ useEffect(() => {
 
           if (response.ok) {
             const result: ProfileResponse = await response.json();
-            console.log('logigng result');
-            console.log(result);
             setProfileResponse(result);
           } else {
             console.error('Failed to fetch data from the API');

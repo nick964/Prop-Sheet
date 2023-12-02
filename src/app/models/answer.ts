@@ -1,6 +1,6 @@
 
 
-interface AnswerDto {
+export interface AnswerDto {
     questionId: number;
     answer: string;
   }

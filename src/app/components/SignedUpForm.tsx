@@ -32,9 +32,6 @@ const SignedUpForm: React.FC = (props) => {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${accessToken}`}
         };
-        console.log('calling this url to add user to group');
-        console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/addUser`);
-        console.log(requestOptions);
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/addUser?groupId=` + groupId, requestOptions);
 
           if (response.ok) {

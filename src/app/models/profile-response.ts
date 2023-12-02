@@ -11,7 +11,7 @@ interface GroupDto {
 interface Member {
     questionId: number | null;
     answer: string | null;
-    submission_status: string | null;
+    submission_status: Number | null;
     score: number | null;
     groupDto: GroupDto;
     icon: string | null;
