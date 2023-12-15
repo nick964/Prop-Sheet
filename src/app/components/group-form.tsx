@@ -1,11 +1,13 @@
 "use client"
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Formik, Field, Form } from 'formik';
 import { Button, Form as BootstrapForm, Spinner } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
 
 export default function GroupForm() {
+    const router = useRouter();
     const { data: session, status } = useSession();
     const [selectedImage, setSelectedImage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +44,13 @@ export default function GroupForm() {
             },
             body: JSON.stringify({ name: values.name }),
         });
+
+        //if succesful, redirect to the profile page
+        if (response.ok) {
+            router.push('/profile');
+        } else {
+            console.error('Failed to fetch data from the API');
+        }
         console.log(JSON.stringify(response));
 
         try {

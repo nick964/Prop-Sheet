@@ -4,6 +4,7 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Container, Col, Row, Button} from "react-bootstrap";
 import * as Yup from 'yup';
+import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 
 interface SignUpFormValues {
@@ -15,8 +16,10 @@ interface SignUpFormValues {
 }
 
 const SignUpForm: React.FC = (props) => {
+  const router = useRouter();
   console.log('in signup form');
   console.log(props);
+
   const groupId = props.groupId;
   const initialValues: SignUpFormValues = {
     firstName: '',
@@ -47,18 +50,21 @@ const SignUpForm: React.FC = (props) => {
     // Handle form submission here (e.g., send data to a server)
     console.log('am i in here?');
     console.log(values);
-    console.log('calling url');
-    console.log(`http://localhost:8080/api/auth/signup`);
-    const result = await fetch(`http://localhost:8080/api/auth/signup`, {
+    console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signup`);
+    const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signup`, {
       method: 'POST',
       body: JSON.stringify(values),
       headers: {
         'Content-Type': 'application/json',
       },
     }).then((res) => {
-      const myresult = res.json();
-      console.log('logging my result');
-      console.log(myresult);
+      console.log(res);
+      if (res.ok) {
+        console.log('success');
+        router.push('/api/auth/signin/credentials');
+      } else {
+        console.log('error');
+      }
     });
     console.log(result);
     resetForm();
