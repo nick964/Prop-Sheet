@@ -6,6 +6,7 @@ import  { useEffect, useState } from 'react';
 import { ProfileResponse } from '../models/profile-response';
 import { Container, Alert, Button} from "react-bootstrap";
 import ProfileComponent from '../components/ProfileComponent';
+import NotLoggedInComponent from '../components/NotLoggedInComponent';
 
 export default  function Page() {
 
@@ -67,17 +68,7 @@ if(session) {
 }
 
 return (
-  <Container className="d-flex align-items-center justify-content-center" style={{ height: '100vh' }}>
-    <Alert variant="info" className="text-center">
-      <p>You need to sign in to access this page.</p>
-      <Button variant="primary" onClick={() => router.push('/api/auth/signin/credentials')}>
-        Sign In
-      </Button>
-      <Button variant="primary" onClick={() => router.push('/signup')}>
-        Register
-      </Button>
-    </Alert>
-  </Container>
+  <NotLoggedInComponent />
 )
 
 }

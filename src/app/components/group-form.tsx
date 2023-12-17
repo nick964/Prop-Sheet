@@ -5,17 +5,22 @@ import { useRouter } from 'next/navigation';
 import { Formik, Field, Form } from 'formik';
 import { Button, Form as BootstrapForm, Spinner } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
+import NotLoggedInComponent from './NotLoggedInComponent';
 
 export default function GroupForm() {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [selectedImage, setSelectedImage] = useState(null);
+    const [notLoggedIn, setNotLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     console.log('in group form');
+
     console.log(JSON.stringify(session));
 
     if(session?.user?.accessToken == null) {
-        router.push('/api/auth/signin/credentials');
+        return (
+            <NotLoggedInComponent />
+        )
     }
 
 
@@ -75,47 +80,50 @@ export default function GroupForm() {
 
 
     return (
-        <Formik
-            initialValues={{
-                name: '',
-                password: '',
-                image: null,
-            }}
-            onSubmit={(values) => {
-                handleFormSubmit(values, selectedImage);
-            }}
-        >
-            <Form>
-                <BootstrapForm.Group controlId="groupName">
-                    <BootstrapForm.Label>Group Name</BootstrapForm.Label>
-                    <Field
-                        type="text"
-                        id="name"
-                        name="name"
-                        className="form-control"
-                        placeholder="Enter Group Name"
-                    />
-                </BootstrapForm.Group>
-
-                <BootstrapForm.Group controlId="groupImage">
-                    <BootstrapForm.Label>Group Image</BootstrapForm.Label>
-                    <BootstrapForm.Group controlId="formFile" className="mb-3">
-                        <BootstrapForm.Label>Default file input example</BootstrapForm.Label>
-                        <BootstrapForm.Control type="file" name='image' onChange={handleImageChange} />
+        <div>
+            <h1>Create a new group</h1>
+            <Formik
+                initialValues={{
+                    name: '',
+                    password: '',
+                    image: null,
+                }}
+                onSubmit={(values) => {
+                    handleFormSubmit(values, selectedImage);
+                }}
+            >
+                <Form>
+                    <BootstrapForm.Group controlId="groupName">
+                        <BootstrapForm.Label>Group Name</BootstrapForm.Label>
+                        <Field
+                            type="text"
+                            id="name"
+                            name="name"
+                            className="form-control"
+                            placeholder="Enter Group Name"
+                        />
                     </BootstrapForm.Group>
-                </BootstrapForm.Group>
 
-                 {/* Display loader while the form is submitting */}
-                 {isLoading && (
-                    <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </Spinner>
-                )}
+                    <BootstrapForm.Group controlId="groupImage">
+                        <BootstrapForm.Label>Group Image</BootstrapForm.Label>
+                        <BootstrapForm.Group controlId="formFile" className="mb-3">
+                            <BootstrapForm.Label>Default file input example</BootstrapForm.Label>
+                            <BootstrapForm.Control type="file" name='image' onChange={handleImageChange} />
+                        </BootstrapForm.Group>
+                    </BootstrapForm.Group>
 
-                <Button variant="primary" type="submit" disabled={isLoading}>
-                    {isLoading ? 'Creating Group...' : 'Create Group'}
-                </Button>
-            </Form>
-        </Formik>
+                    {/* Display loader while the form is submitting */}
+                    {isLoading && (
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                    )}
+
+                    <Button variant="primary" type="submit" disabled={isLoading}>
+                        {isLoading ? 'Creating Group...' : 'Create Group'}
+                    </Button>
+                </Form>
+            </Formik>
+        </div>
     )
 }
