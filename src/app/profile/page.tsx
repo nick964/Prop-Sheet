@@ -73,6 +73,9 @@ return (
       <Button variant="primary" onClick={() => router.push('/api/auth/signin/credentials')}>
         Sign In
       </Button>
+      <Button variant="primary" onClick={() => router.push('/signup')}>
+        Register
+      </Button>
     </Alert>
   </Container>
 )

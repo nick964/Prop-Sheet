@@ -11,6 +11,13 @@ export default function GroupForm() {
     const { data: session, status } = useSession();
     const [selectedImage, setSelectedImage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    console.log('in group form');
+    console.log(JSON.stringify(session));
+
+    if(session?.user?.accessToken == null) {
+        router.push('/api/auth/signin/credentials');
+    }
+
 
     const handleImageChange = (e) => {
         console.log(JSON.stringify(session));

@@ -4,6 +4,8 @@ import { Card, ListGroup, Button, Modal } from 'react-bootstrap';
 import { ProfileResponse } from '../models/profile-response';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+
 
 interface ProfileComponentProps {
   profileData: ProfileResponse;
@@ -16,8 +18,13 @@ const EmptyGroupsComponent: React.FC = () => (
 const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
+  const { data: session, status } = useSession();
   const [selectedGroup, setSelectedGroup] = useState(0);
   const [selectedShareOption, setSelectedShareOption] = useState('');
+
+  if(session?.user?.accessToken == null) {
+    router.push('/api/auth/signin/credentials');
+}
 
   const handleShareClick = (groupId: number) => {
     setSelectedGroup(groupId);
