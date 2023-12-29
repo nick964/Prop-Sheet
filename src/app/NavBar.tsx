@@ -11,22 +11,20 @@ export default function NavBar() {
   const { data: session } = useSession();
 
   return (
-    <Navbar bg="primary" variant="dark" sticky="top" expand="sm" collapseOnSelect>
-      <Container>
-        <Navbar.Brand as={Link} href="/">
-          Prop Sheet Generator
+    <Navbar  sticky="top" expand="sm" collapseOnSelect fixedTop
+    style={{backgroundSize: "0", backgroundColor: "#03293F"}}>
+      <Container >
+        <Navbar.Brand as={Link} href="/" style={{color: "white"}}>
+          Super Bowl Prop Tracker
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="main-navbar" />
         <Navbar.Collapse id="main-navbar">
           <Nav className="mr-auto">
-            <Nav.Link as={Link} href="/profile" active={pathname === '/profile'}>
+            <Nav.Link as={Link} href="/profile" active={pathname === '/profile'} style={{color: "white"}}>
               Profile
             </Nav.Link>
-            <Nav.Link as={Link} href="/create-group" active={pathname === '/create-group'}>
+            <Nav.Link as={Link} href="/create-group" active={pathname === '/create-group'} style={{color: "white"}}>
               Create New Group
-            </Nav.Link>
-            <Nav.Link as={Link} href="/submit" active={pathname === '/submit'}>
-              Enter Submission
             </Nav.Link>
           </Nav>
 
@@ -34,14 +32,14 @@ export default function NavBar() {
             <Nav>
               {session ? (
                 // If user is logged in, display the logout link
-                <Nav.Link href="/api/auth/signout">Logout</Nav.Link>
+                <Nav.Link href="/api/auth/signout" style={{color: "white"}}>Logout</Nav.Link>
               ) : (
                 <>
             
-                <Nav.Link href="/api/auth/signin/credentials" active={pathname === '/login'}>
+                <Nav.Link href="/api/auth/signin/credentials" active={pathname === '/login'} style={{color: "white"}}>
                   Login
                 </Nav.Link>
-                <Nav.Link as={Link} href="/signup" active={pathname === '/signup'}>
+                <Nav.Link as={Link} href="/signup" active={pathname === '/signup'} style={{color: "white"}}>
                 Signup
                 </Nav.Link>
                 </>

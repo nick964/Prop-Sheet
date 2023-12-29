@@ -28,7 +28,7 @@ export default async function RootLayout({
           <Provider session={session}>
             <NavBar />
             <main>
-            <Container>
+            <Container fluid>
               {children}
             </Container>
             </main>
