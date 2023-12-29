@@ -84,8 +84,6 @@ export const options: NextAuthOptions = {
     ],
     callbacks: {
         async signIn({user, account, profile}) {
-            const cookieStore = cookies();
-            const theme = cookieStore.get('groupId');
             console.log("USER");
             console.log(user);
             console.log("ACCOUNT");
@@ -93,22 +91,40 @@ export const options: NextAuthOptions = {
             console.log("PROFILE");
             console.log(profile);
 
+            if(profile != null && account?.provider != null) {
+                console.log('outh sign up now in sign in form');
+                console.log('profile');
+                console.log(profile);
+                const credentials = {
+                    username:  profile.data.username,
+                    name: profile.data.name,
+                    email: profile.data.username,
+                    provider: account?.provider
+                };
+                const returnedUser = await oauthlogin(credentials);
+                console.log('returnedUser in sign in');
+                console.log(returnedUser);
+            } else {
+                console.log('normal sign in');
+            }
+
+
             console.log('user');
             console.log(user);
 
             return true;
         },
         async jwt({ token, user, account, profile }) {
-            // console.log('now im in jwt');
-            // console.log('JWT');
-            // console.log(token);
-            // console.log(user);
-            // console.log(account);
-            // console.log(profile);
+            console.log('now im in jwt');
+            console.log('JWT');
+            console.log(token);
+            console.log(user);
+            console.log(account);
+            console.log(profile);
             if (user != null && !token.accessToken) {
                 console.log('CALLING OAUTH NOW');
                 const credentials = {
-                    username: token?.email || 'default-username',
+                    username: profile.data.username,
                     name: token.name,
                     email: token.email,
                     provider: account?.provider,

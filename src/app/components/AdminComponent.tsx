@@ -18,6 +18,12 @@ interface Category {
   questions: Question[];
 }
 
+interface ConfigRule {
+  rule: string;
+  description: string;
+  enabled: boolean;
+}
+
 interface MasterAnswer {
   questionId: number;
   answer: string;
@@ -29,6 +35,40 @@ const AdminPage: React.FC = () => {
   const { data: session, status } = useSession();
   const accessToken = session?.user?.accessToken;
   const [categories, setCategories] = useState<Category[]>([]);
+  const [configRules, setConfigRules] = useState<ConfigRule[]>([]);
+  const [toggleState, setToggleState] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleToggle = async (config: ConfigRule, newToggleState: boolean) => {
+    setIsSubmitting(true);
+    console.log('Toggle state changed:', newToggleState);
+    // Replace with actual request logic
+    try {
+      const req = {
+        rule: config.rule,
+        enabled: newToggleState,
+        description: config.description
+      };
+      const requestOptions = {
+        method: 'POST', // or 'GET', depending on your backend requirements
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(req)
+      };
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}config/update`, requestOptions);
+      if (response.ok) {
+        console.log('Toggle state updated successfully');
+      } else {
+        console.error('Failed to update toggle state');
+      }
+    } catch (error) {
+      console.error('Error updating toggle state:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Simulate fetching data from an API
   useEffect(() => {
@@ -53,7 +93,29 @@ const AdminPage: React.FC = () => {
       }
       
     };
+
+    const fetchConfigRules = async () => {
+      try {
+        if (accessToken) {
+          const requestOptions = {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${accessToken}` }
+          };
+          const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}config/all`, requestOptions);
+          if (response.ok) {
+            const data = await response.json();
+            setConfigRules(data);
+          } else {
+            console.error('Failed to fetch data from the API');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+      
+    };
     fetchData();
+    fetchConfigRules();
   }, []);
 
   const handleAnswerChange = (categoryId: number, questionId: number, newAnswer: string) => {
@@ -102,6 +164,18 @@ const AdminPage: React.FC = () => {
   return (
     <Container className="mt-4">
       <h2>Admin Page - Update Master Answers</h2>
+      <hr />
+      {configRules.map((config) => (
+        <Form.Switch
+          key={config.rule}
+          type="switch"
+          id={config.rule}
+          label={config.description}
+          checked={config.enabled}
+          onChange={(e) => handleToggle(config, e.target.checked)}
+          disabled={isSubmitting}
+        />
+      ))}
       <hr />
 
       {categories.map((category) => (
