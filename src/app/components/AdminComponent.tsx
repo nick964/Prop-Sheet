@@ -43,6 +43,13 @@ const AdminPage: React.FC = () => {
     setIsSubmitting(true);
     console.log('Toggle state changed:', newToggleState);
     // Replace with actual request logic
+
+    // Update the state
+    setConfigRules((prevConfigRules) =>
+      prevConfigRules.map((c) =>
+        c.rule === config.rule ? { ...c, enabled: newToggleState } : c
+      )
+    );
     try {
       const req = {
         rule: config.rule,
