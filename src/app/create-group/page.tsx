@@ -9,7 +9,7 @@ export default async function Page() {
 
   return (
     <div className="d-flex flex-column align-items-center">
-      <GroupForm>{/* pass props here */}</GroupForm>
+      <GroupForm />
     </div>
   );
 }

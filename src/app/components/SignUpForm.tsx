@@ -15,12 +15,13 @@ interface SignUpFormValues {
   groupId: string;
 }
 
-const SignUpForm: React.FC = (props) => {
-  const router = useRouter();
-  console.log('in signup form');
-  console.log(props);
+interface GroupFormProps {
+  groupId: string;
+}
 
-  const groupId = props.groupId;
+const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
+  const router = useRouter();
+
   const initialValues: SignUpFormValues = {
     firstName: '',
     lastName: '',

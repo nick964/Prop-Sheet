@@ -24,13 +24,6 @@ export default function GroupForm() {
     }
 
 
-    const handleImageChange = (e) => {
-        console.log(JSON.stringify(session));
-        console.log(e.target.files[0]);
-        const file = e.target.files[0];
-        setSelectedImage(file);
-    };
-
     const handleFormSubmit = async (values: any, selectedImage: File | null) => {
         setIsLoading(true);
         // Do something with the form values and the selected image
@@ -107,8 +100,7 @@ export default function GroupForm() {
                     <BootstrapForm.Group controlId="groupImage">
                         <BootstrapForm.Label>Group Image</BootstrapForm.Label>
                         <BootstrapForm.Group controlId="formFile" className="mb-3">
-                            <BootstrapForm.Label>Default file input example</BootstrapForm.Label>
-                            <BootstrapForm.Control type="file" name='image' onChange={handleImageChange} />
+                            <BootstrapForm.Label>Default file input example</BootstrapForm.Label>∂
                         </BootstrapForm.Group>
                     </BootstrapForm.Group>
 

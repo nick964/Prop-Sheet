@@ -19,8 +19,6 @@ const [profileResponse, setProfileResponse] = useState<ProfileResponse | null>(n
 
 
 const accessToken = session?.user?.accessToken;
-
-console.log(status);
 useEffect(() => {
     const fetchData = async () => {
       try {

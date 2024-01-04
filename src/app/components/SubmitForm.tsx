@@ -12,10 +12,15 @@ interface SubmitFormProps {
   onSubmit: (answers: any) => Promise<void>;
 }
 
+interface Response {
+  [questionId: string]: string; // Assuming questionId is a string and response is a string
+  response: string;
+}
+
 const SubmitForm: React.FC<SubmitFormProps> = ({ data, onSubmit, groupId }) => {
   const [showModal, setShowModal] = useState(true);
   const [currentSection, setCurrentSection] = useState(0);
-  const [userResponses, setUserResponses] = useState([]);
+  const [userResponses, setUserResponses] =  useState<Response[]>([]);
   const [loading, setLoading] = useState(false);
   const [sectionError, setSectionError] = useState<string | null>(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -23,17 +28,19 @@ const SubmitForm: React.FC<SubmitFormProps> = ({ data, onSubmit, groupId }) => {
   const handleResponse = (questionId: any, response: any) => {
     setUserResponses((prevResponses) => {
       const updatedResponses = [...prevResponses];
-      updatedResponses[currentSection] = { ...updatedResponses[currentSection], [questionId]: response };
+      const currentSectionResponses = updatedResponses[currentSection] || {};
+      updatedResponses[currentSection] = { ...currentSectionResponses, [questionId]: response };
       return updatedResponses;
     });
   };
 
   const validateResponses = (responses: Array<Record<number, string>>, currentSection: number) => {
     const sectionResponses = responses[currentSection] || {};
-    const sectionQuestions = data[currentSection].questions;
+    const sectionQuestions = data && data[currentSection] ? data[currentSection].questions : [];
 
     const missingResponses = sectionQuestions.filter((question) => {
-      const response = sectionResponses[question.id];
+      const qNumber = question.id as unknown as number;
+      const response = sectionResponses[qNumber];
       return !response || response.trim() === '';
     });
 
@@ -47,7 +54,7 @@ const SubmitForm: React.FC<SubmitFormProps> = ({ data, onSubmit, groupId }) => {
       const errMsg = 'Please fill out all questions before proceeding to the next section';
       setSectionError(errMsg);
     } else {
-      if (currentSection === data.length - 1) {
+      if (data && currentSection === data.length - 1) {
         setShowConfirmationModal(true);
       } else {
         setSectionError(null);
@@ -76,12 +83,14 @@ const SubmitForm: React.FC<SubmitFormProps> = ({ data, onSubmit, groupId }) => {
   const mapToAnswers = async () => {
     const answers: AnswerDto[] = [];
     for (let i = 0; i < userResponses.length; i++) {
-      for (let j = 0; j < data[i].questions.length; j++) {
-        const ans: AnswerDto = {
-          questionId: data[i].questions[j].id,
-          answer: userResponses[i][data[i].questions[j].id],
-        };
-        answers.push(ans);
+      if(data) {
+        for (let j = 0; j < data[i].questions.length; j++) {
+          const ans: AnswerDto = {
+            questionId: data && data[i] && data[i].questions[j] ? data[i].questions[j].id : null,
+            answer: data && data[i] && data[i].questions[j] ? userResponses[i][data[i].questions[j].id] : null,
+          };
+          answers.push(ans);
+        }
       }
     }
     return answers;
@@ -102,27 +111,30 @@ const SubmitForm: React.FC<SubmitFormProps> = ({ data, onSubmit, groupId }) => {
     setShowConfirmationModal(false);
   };
 
-  return (
-    <>
-      <QuestionnaireModal
-        showModal={showModal}
-        currentSection={currentSection}
-        data={data}
-        userResponses={userResponses}
-        onClose={onCloseModal}
-        onPreviousSection={handlePreviousSection}
-        onNextSection={handleNextSection}
-        loading={loading}
-        sectionError={sectionError}
-        handleResponse={handleResponse}
+  if(data) {
+    return (
+      <>
+        <QuestionnaireModal
+          showModal={showModal}
+          currentSection={currentSection}
+          data={data || []}
+          userResponses={userResponses}
+          onClose={onCloseModal}
+          onPreviousSection={handlePreviousSection}
+          onNextSection={handleNextSection}
+          loading={loading}
+          sectionError={sectionError}
+          handleResponse={handleResponse}
+        />
+        <ConfirmationModal
+        showModal={showConfirmationModal}
+        onConfirm={handleConfirmSubmission}
+        onCancel={handleCancelSubmission}
       />
-      <ConfirmationModal
-      showModal={showConfirmationModal}
-      onConfirm={handleConfirmSubmission}
-      onCancel={handleCancelSubmission}
-    />
-      </>
-  );
+        </>
+    );
+  }
+
 };
 
 export default SubmitForm;

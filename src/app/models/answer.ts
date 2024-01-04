@@ -1,7 +1,7 @@
 
 
 export interface AnswerDto {
-    questionId: number;
-    answer: string;
+    questionId: string | null;
+    answer: string | null;
   }
 

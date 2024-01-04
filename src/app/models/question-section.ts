@@ -5,7 +5,7 @@ export interface QuestionSection {
 }
 
 export interface Question {
-    id: number,
+    id: string,
     text: string,
     questionType: string,
     lineValue: number | null,

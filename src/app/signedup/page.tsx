@@ -12,8 +12,12 @@ export default async function Page({
     params: { slug: string };
     searchParams?: { [key: string]: string | string[] | undefined };
   }) {
-    const groupId = await searchParams?.groupid;
-    console.log(groupId);
+      // Handle groupId as a string, default to empty string if undefined
+      const groupId = typeof searchParams?.groupid === 'string' 
+      ? searchParams.groupid 
+      : '';
+
+      console.log(groupId);
 
     return (
       <SignedUpForm groupId={groupId}/>

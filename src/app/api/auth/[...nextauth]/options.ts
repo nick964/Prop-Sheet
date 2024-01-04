@@ -56,7 +56,10 @@ export const options: NextAuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                const creds = {username : credentials?.username, password: credentials?.password};
+                const creds =  {
+                    username : credentials?.username || '', 
+                    password: credentials?.password || ''
+                };
                 const user = await login(creds);
                 console.log('user');
                 console.log(user);
@@ -75,7 +78,18 @@ export const options: NextAuthOptions = {
         TwitterProvider({
             clientId: process.env.TWITTER_CLIENT_ID as string,
             clientSecret: process.env.TWITTER_CLIENT_SECRET as string,
-            version: "2.0"
+            version: '2.0',
+            // rewrite the userInfo address to obtain username
+            userinfo: 'https://api.twitter.com/2/users/me?user.fields=id,username,profile_image_url',
+            profile(profile) {
+              return {
+                id: profile.data.id,
+                // use username instead of name
+                name: profile.data.name + ',' + profile.data.username,
+                email: profile.data.email ?? null,
+                image: profile.data.profile_image_url,
+              }
+            },
         }),
         FacebookProvider({
             clientId: process.env.FACEBOOK_CLIENT_ID as string,
@@ -95,12 +109,21 @@ export const options: NextAuthOptions = {
                 console.log('outh sign up now in sign in form');
                 console.log('profile');
                 console.log(profile);
+                console.log('logging profile.data.username');
+                
+                const nameData = user.name ?? '';
+                const nameDataArray = nameData.split(',');
+                const name = nameDataArray[0] || '';
+                const username = nameDataArray[1] || '';
+                const email = profile?.email || '';
                 const credentials = {
-                    username:  profile.data.username,
-                    name: profile.data.name,
-                    email: profile.data.username,
+                    username:  username,
+                    name: name,
+                    email: email,
                     provider: account?.provider
                 };
+                console.log('credentials');
+                console.log(credentials);
                 const returnedUser = await oauthlogin(credentials);
                 console.log('returnedUser in sign in');
                 console.log(returnedUser);
@@ -123,9 +146,17 @@ export const options: NextAuthOptions = {
             console.log(profile);
             if (user != null && !token.accessToken) {
                 console.log('CALLING OAUTH NOW');
+                console.log('profile');
+                console.log(profile);
+                const nameData = user?.name ?? '';
+                const nameDataArray = nameData.split(',');
+                console.log('nameDataArray');
+                console.log(nameDataArray);
+                const name = nameDataArray[0] || '';
+                const username = nameDataArray[1] || '';
                 const credentials = {
-                    username: profile.data.username,
-                    name: token.name,
+                    username: username,
+                    name: name,
                     email: token.email,
                     provider: account?.provider,
 
@@ -145,9 +176,11 @@ export const options: NextAuthOptions = {
         },
         async session({ session, token, user }) {
             // Send properties to the client, like an access_token and user id from a provider.
-            session.user.accessToken = token.accessToken;
+            if (session.user) {
+                session.user.accessToken = token.accessToken?.toString() ?? '';
+            }
             
             return session;
-          }
+        }
     },
 }

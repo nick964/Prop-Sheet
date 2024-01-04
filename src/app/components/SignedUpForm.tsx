@@ -4,19 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { Container, Col, Row, Button} from "react-bootstrap";
 
-interface SignUpFormValues {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
+interface SignedUpFormProps {
   groupId: string;
 }
 
-const SignedUpForm: React.FC = (props) => {
-  console.log('in signed up form');
-  console.log(props);
-  const groupId = props.groupId;
-
+const SignedUpForm: React.FC<SignedUpFormProps> = ({ groupId }) => {
   const { data: session, status } = useSession();
   console.log('loggin session details in signed up form');
   console.log(JSON.stringify(session));

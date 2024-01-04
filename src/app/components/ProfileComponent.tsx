@@ -29,6 +29,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
   }
   const accessToken = session?.user?.accessToken;
 
+
   const handleShareClick = (groupId: number) => {
     setSelectedGroup(groupId);
     setShowModal(true);

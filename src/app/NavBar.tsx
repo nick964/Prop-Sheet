@@ -11,7 +11,7 @@ export default function NavBar() {
   const { data: session } = useSession();
 
   return (
-    <Navbar  sticky="top" expand="sm" collapseOnSelect fixedTop
+    <Navbar  sticky="top" expand="sm" collapseOnSelect
     style={{backgroundSize: "0", backgroundColor: "#03293F"}}>
       <Container >
         <Navbar.Brand as={Link} href="/" style={{color: "white"}}>
