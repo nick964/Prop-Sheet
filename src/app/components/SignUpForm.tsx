@@ -40,7 +40,7 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
   const handleSignIn = async (provider: string, groupId: string) => {
     console.log('logging groupId handle sign in');
     console.log(groupId);
-    var myCallbackUrl = 'http://localhost:3000/signedup';
+    var myCallbackUrl = `${process.env.NEXT_PUBLIC_FRONTEND_URL}api/auth/signup`;
     if(groupId) {
       myCallbackUrl = myCallbackUrl + '?groupid=' + groupId;
     }
