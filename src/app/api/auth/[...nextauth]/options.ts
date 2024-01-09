@@ -14,8 +14,8 @@ async function login(credentials: { username: string, password: string }) {
             body: JSON.stringify(credentials)
         };
         console.log('calling this url');
-        console.log(`${process.env.BACKEND_URL}api/auth/signin`);
-        const response = await fetch(`${process.env.BACKEND_URL}api/auth/signin`, requestOptions);
+        console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signin`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signin`, requestOptions);
         const data = await response.json();
         console.log(JSON.stringify(data));
         return data;
@@ -35,8 +35,8 @@ async function oauthlogin(credentials: { username: string }) {
             body: JSON.stringify(credentials)
         };
         console.log('calling this url');
-        console.log(`${process.env.BACKEND_URL}api/auth/oauth-register`);
-        const response = await fetch(`${process.env.BACKEND_URL}api/auth/oauth-register`, requestOptions);
+        console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/oauth-register`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/oauth-register`, requestOptions);
         const data = await response.json();
         console.log(JSON.stringify(data));
         return data;
@@ -111,18 +111,26 @@ export const options: NextAuthOptions = {
                 console.log(profile);
                 console.log('logging profile.data.username');
                 
-                const nameData = user.name ?? '';
-                const nameDataArray = nameData.split(',');
-                const name = nameDataArray[0] || '';
-                const username = nameDataArray[1] || '';
+                var username = '';
+                if(account.provider === 'twitter') {
+                    const nameData = user.name ?? '';
+                    const nameDataArray = nameData.split(',');
+                    const name = nameDataArray[0] || '';
+                    const username = nameDataArray[1] || '';
+                } else {
+                    const name = profile?.name || '';
+                    username = profile?.email || '';
+                    const email = profile?.email || '';
+                }
                 const email = profile?.email || '';
                 const credentials = {
                     username:  username,
                     name: name,
                     email: email,
-                    provider: account?.provider
+                    provider: account?.provider,
+                    img: profile?.image || ''
                 };
-                console.log('credentials');
+                console.log('credentials before oauth login');
                 console.log(credentials);
                 const returnedUser = await oauthlogin(credentials);
                 console.log('returnedUser in sign in');
