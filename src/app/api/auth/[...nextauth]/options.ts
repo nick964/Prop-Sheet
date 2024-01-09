@@ -112,13 +112,14 @@ export const options: NextAuthOptions = {
                 console.log('logging profile.data.username');
                 
                 var username = '';
+                var name = '';
                 if(account.provider === 'twitter') {
                     const nameData = user.name ?? '';
                     const nameDataArray = nameData.split(',');
-                    const name = nameDataArray[0] || '';
+                    name = nameDataArray[0] || '';
                     const username = nameDataArray[1] || '';
                 } else {
-                    const name = profile?.name || '';
+                    name = profile?.name || '';
                     username = profile?.email || '';
                     const email = profile?.email || '';
                 }
