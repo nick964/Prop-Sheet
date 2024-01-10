@@ -27,7 +27,7 @@ const HomePage: React.FC = () => {
                   
                 />
               </div>
-                <p className="lead pt-5">
+                <p className="lead pt-5" style={{color: 'white'}}>
                   The ultimate destination for Super Bowl prop betting fun. Predict, compete, and enjoy the game like never before.
                 </p>
                 <Link href="/signup">
@@ -101,8 +101,8 @@ const HomePage: React.FC = () => {
     
           <div className="hero-section text-center bg-hero-3 pb-5 pt-5" style={{backgroundColor: '#004864'}}>
             <Container style={{ maxWidth: '500px' }}>
-              <h2>Real-time Tracking</h2>
-              <p className="lead">
+              <h2 style={{color: 'white'}}>Real-time Tracking</h2>
+              <p className="lead" style={{color: 'white'}}>
                 Watch your predictions unfold live during the Super Bowl.
               </p>
               <Link href="/signup">
