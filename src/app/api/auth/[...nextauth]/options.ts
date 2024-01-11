@@ -14,8 +14,8 @@ async function login(credentials: { username: string, password: string }) {
             body: JSON.stringify(credentials)
         };
         console.log('calling this url');
-        console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signin`);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signin`, requestOptions);
+        console.log(`${process.env.NEXT_PUBLIC_FRONTEND_URL}api/auth/signin`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_FRONTEND_URL}api/auth/signin`, requestOptions);
         const data = await response.json();
         console.log(JSON.stringify(data));
         return data;
@@ -109,7 +109,6 @@ export const options: NextAuthOptions = {
                 console.log('outh sign up now in sign in form');
                 console.log('profile');
                 console.log(profile);
-                console.log('logging profile.data.username');
                 
                 var username = '';
                 var name = '';
@@ -117,11 +116,10 @@ export const options: NextAuthOptions = {
                     const nameData = user.name ?? '';
                     const nameDataArray = nameData.split(',');
                     name = nameDataArray[0] || '';
-                    const username = nameDataArray[1] || '';
+                    username = nameDataArray[1] || '';
                 } else {
                     name = profile?.name || '';
                     username = profile?.email || '';
-                    const email = profile?.email || '';
                 }
                 const email = profile?.email || '';
                 const credentials = {
@@ -150,19 +148,20 @@ export const options: NextAuthOptions = {
             console.log('now im in jwt');
             console.log('JWT');
             console.log(token);
-            console.log(user);
-            console.log(account);
-            console.log(profile);
             if (user != null && !token.accessToken) {
-                console.log('CALLING OAUTH NOW');
-                console.log('profile');
-                console.log(profile);
-                const nameData = user?.name ?? '';
-                const nameDataArray = nameData.split(',');
-                console.log('nameDataArray');
-                console.log(nameDataArray);
-                const name = nameDataArray[0] || '';
-                const username = nameDataArray[1] || '';
+                console.log('CALLING OAUTH NOW IN JWT FUNCTION');
+                var username = '';
+                var name = '';
+                if(account != null && account.provider === 'twitter') {
+                    const nameData = user.name ?? '';
+                    const nameDataArray = nameData.split(',');
+                    name = nameDataArray[0] || '';
+                    username = nameDataArray[1] || '';
+                } else {
+                    name = profile?.name || '';
+                    username = profile?.email || '';
+                }
+                const email = profile?.email || '';
                 const credentials = {
                     username: username,
                     name: name,

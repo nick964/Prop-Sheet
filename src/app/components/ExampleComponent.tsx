@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { AnswerDto } from '../models/answer';
 import { QuestionSection } from '../models/question-section';
+import { useRouter } from 'next/navigation';
 import SubmitForm from './SubmitForm';
 
 interface ExampleComponentProps {
@@ -13,8 +14,7 @@ interface ExampleComponentProps {
 const ExampleComponent: React.FC<ExampleComponentProps> = ({ groupId }) => {
   const { data: session, status } = useSession();
   const accessToken = session?.user?.accessToken;
-  console.log('loggin session details in signed up form');
-  console.log(JSON.stringify(session));
+  const router = useRouter();
 
   const [questions, setQuestions] = useState<QuestionSection[] | null>(null);
 
@@ -62,7 +62,7 @@ const ExampleComponent: React.FC<ExampleComponentProps> = ({ groupId }) => {
 
       if (response.ok) {
         console.log('Submission successful!');
-        // Handle success, e.g., show a success message or redirect
+        router.push('/track/' + groupId);
       } else {
         console.error('Submission failed:', response.statusText);
         // Handle failure, e.g., show an error message

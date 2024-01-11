@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -32,7 +33,7 @@ export default function NavBar() {
             <Nav>
               {session ? (
                 // If user is logged in, display the logout link
-                <Nav.Link href="/api/auth/signout" style={{color: "white"}}>Logout</Nav.Link>
+                <Nav.Link style={{color: "white"}} onClick={() => signOut({ callbackUrl: '/', redirect:true })}>Logout</Nav.Link>
               ) : (
                 <>
             

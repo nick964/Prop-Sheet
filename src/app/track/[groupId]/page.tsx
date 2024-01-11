@@ -37,6 +37,12 @@ export default function Page() {
     };
 
     fetchData();
+    
+    // Set up a timer to call fetchData every 60 seconds (60000 milliseconds)
+    const intervalId = setInterval(fetchData, 60000);
+
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId);
   }, [groupId]);
 
 
