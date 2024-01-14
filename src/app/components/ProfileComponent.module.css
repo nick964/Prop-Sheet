@@ -1,0 +1,49 @@
+/* YourComponent.module.css */
+
+.card {
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+  }
+  
+  .listGroupItem {
+    border-bottom: 1px solid #eee;
+    padding: 15px;
+  }
+  
+  .listGroupItem:last-child {
+    border-bottom: none;
+  }
+  
+  .groupIcon {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .oauthButton, .modalButton {
+    margin: 5px;
+    width: auto;
+  }
+  
+  .formGroup {
+    margin-bottom: 15px;
+  }
+  
+  .formControl {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+  }
+  
+  .formLabel {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .modalContent {
+    padding: 20px;
+  }
+  

@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Formik, Field, Form } from 'formik';
-import { Button, Form as BootstrapForm, Spinner } from 'react-bootstrap';
+import { Button, Form as BootstrapForm, Spinner, Alert} from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
 import NotLoggedInComponent from './NotLoggedInComponent';
+import styles from './GroupForm.module.css';
+
 
 export default function GroupForm() {
     const router = useRouter();
@@ -13,6 +15,7 @@ export default function GroupForm() {
     const [selectedImage, setSelectedImage] = useState(null);
     const [notLoggedIn, setNotLoggedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
     console.log('in group form');
 
     console.log(JSON.stringify(session));
@@ -26,6 +29,7 @@ export default function GroupForm() {
 
     const handleFormSubmit = async (values: any, selectedImage: File | null) => {
         setIsLoading(true);
+        setError('');
         // Do something with the form values and the selected image
         console.log('Form values:', values);
         console.log('Selected image:', selectedImage);
@@ -40,41 +44,39 @@ export default function GroupForm() {
         console.log(JSON.stringify(headerTest));
 
 
-        // Assuming you have an endpoint to handle the user's responses
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/create`, {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + session?.user?.accessToken
-            },
-            body: JSON.stringify({ name: values.name }),
-        });
-
-        //if succesful, redirect to the profile page
-        if (response.ok) {
-            router.push('/profile');
-        } else {
-            console.error('Failed to fetch data from the API');
-        }
-        console.log(JSON.stringify(response));
-
         try {
-
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/create`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + session?.user?.accessToken
+                },
+                body: JSON.stringify({ name: values.name }),
+            });
+            console.log(JSON.stringify(response));
+            const data = await response.json();
+            console.log(JSON.stringify(data));
+            if (response.ok) {
+                router.push('/profile');
+            } else {
+                setError(data.message || 'Failed to create group');
+                console.error('Failed to fetch data from the API');
+            }
         } catch (error) {
-            console.log(error);
-
-        } finally {
-            setIsLoading(false);
+            setError('Error calling API');
         }
-
-
-        // Call any other function or update state in the parent component
+        setIsLoading(false);
     };
 
 
     return (
-        <div>
-            <h1>Create a new group</h1>
+        <div className={styles.formContainer}>
+            <h3 className={styles.formHeading}>Create a new group</h3>
+            {error && 
+            <Alert key="danger" variant="danger">
+                 {error}
+             </Alert>         
+            } {/* Display error message */}
             <Formik
                 initialValues={{
                     name: '',
@@ -86,7 +88,7 @@ export default function GroupForm() {
                 }}
             >
                 <Form>
-                    <BootstrapForm.Group controlId="groupName">
+                    <BootstrapForm.Group controlId="groupName" className={styles.formGroup}>
                         <BootstrapForm.Label>Group Name</BootstrapForm.Label>
                         <Field
                             type="text"
@@ -106,9 +108,11 @@ export default function GroupForm() {
 
                     {/* Display loader while the form is submitting */}
                     {isLoading && (
-                        <Spinner animation="border" role="status">
+                        <div className={styles.loadingSpinner}>
+                            <Spinner animation="border" role="status">
                             <span className="visually-hidden">Loading...</span>
-                        </Spinner>
+                            </Spinner>
+                        </div>
                     )}
 
                     <Button variant="primary" type="submit" disabled={isLoading}>

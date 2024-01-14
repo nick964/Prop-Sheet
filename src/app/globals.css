@@ -54,3 +54,13 @@ img {
 .modal-content-exit {
   opacity: 0;
 }
+
+.OauthSigninOptions {
+  text-align: center;
+}
+
+.oauthButton {
+  margin: 10px;
+  width: 200px;
+  display: inline-block;
+}

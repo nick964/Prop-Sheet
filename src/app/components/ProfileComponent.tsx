@@ -5,7 +5,7 @@ import { ProfileResponse } from '../models/profile-response';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-
+import styles from './ProfileComponent.module.css';
 
 interface ProfileComponentProps {
   profileData: ProfileResponse;
@@ -112,7 +112,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
 
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <Card.Header>Your Groups</Card.Header>
       <Card.Body>
         {profileData.members.length > 0 ? (
