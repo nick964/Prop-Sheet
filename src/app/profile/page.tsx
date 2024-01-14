@@ -11,6 +11,7 @@ import NotLoggedInComponent from '../components/NotLoggedInComponent';
 export default  function Page() {
 
 const { data: session, status } = useSession();
+const [error, setError] = useState('');
 const router = useRouter();
 console.log('loggin session details');
 console.log(JSON.stringify(session));
@@ -21,6 +22,7 @@ const [profileResponse, setProfileResponse] = useState<ProfileResponse | null>(n
 const accessToken = session?.user?.accessToken;
 useEffect(() => {
     const fetchData = async () => {
+      console.log('fetching data in profile page');
       try {
         if (accessToken) {
           // Assuming you have an API endpoint that requires authentication
@@ -37,10 +39,12 @@ useEffect(() => {
             const result: ProfileResponse = await response.json();
             setProfileResponse(result);
           } else {
+            setError('Failed to fetch data from the API');
             console.error('Failed to fetch data from the API');
           }
         } 
       } catch (error) {
+        setError('Error fetching data');
         console.error('Error fetching data:', error);
       }
     };
@@ -54,12 +58,17 @@ useEffect(() => {
 if(session) {
     return (
         <div>
-                {profileResponse ? (
-                  <ProfileComponent profileData={profileResponse} />
-                ) : (
-                <div>Loading..</div>)}
+          {error && (
+            <Alert key="danger" variant="danger">
+              {error}
+            </Alert>
+          )}
 
-
+          {!error && profileResponse != null ? (
+            <ProfileComponent profileData={profileResponse} />
+          ) : (
+            <div>Loading...</div>
+          )}
         </div>
 
     )

@@ -112,44 +112,42 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
 
 
   return (
-    <Card className={styles.card}>
-      <Card.Header>Your Groups</Card.Header>
+    <Card className={`${styles.card} shadow-sm`}>
+      <Card.Header className="bg-primary text-white">Your Groups</Card.Header> {/* Colorful header */}
       <Card.Body>
         {profileData.members.length > 0 ? (
           <ListGroup>
             {profileData.members.map((member, index) => (
-              <ListGroup.Item key={index} className="list-group-item">
-                <h5>
-                  <Link href={member.submission_status === 0 ? `/submit/${member.groupDto.id}` : `/track/${member.groupDto.id}`}>
-                    {`Group: ${member.groupDto.name}`}
-                  </Link>
-                </h5>
-                {member.icon && <img src={member.icon} alt="Group Icon" className="group-icon" />}
+              <ListGroup.Item key={index} className="list-group-item d-flex align-items-center justify-content-between">
+                <div className="flex-grow-1 me-3">
+                  <h5>
+                    <Link href={member.submission_status === 0 ? `/submit/${member.groupDto.id}` : `/track/${member.groupDto.id}`}>
+                      {`Group: ${member.groupDto.name}`}
+                    </Link>
+                  </h5>
+                  {member.icon && <img src={member.icon} alt="Group Icon" className="group-icon img-fluid" />}
+                  <div>
+                    <p className={`${member.submission_status == 0 ? 'text-danger' : 'text-success'}`}>
+                      {member.submission_status == 0 ? 'You have not yet submitted' : `Submission Status: Submitted! Score: ${member.score}`}
+                    </p>
+                  </div>
+                </div>
+                <div>
                 {member.submission_status == 0 ? (
-                    <div>
-                      <p>You have not yet submitted</p>
-                      <Button variant="primary" href={`/submit/${member.groupDto.id}`}>
-                        Submit Now
-                      </Button>
-                    </div>
+                  <Button variant="primary" className="me-2" href={`/submit/${member.groupDto.id}`}>
+                    Submit Now
+                  </Button>
                   ) : (
-                    <div>
-                      <p>{`Submission Status: Submitted!`}</p>
-                      <p>{`Score: ${member.score}`}</p>
-                      <Button variant="primary" href={`/track/${member.groupDto.id}`}>
-                        Track
-                      </Button>
-                    </div>
-      )}
-
-
-                <Button variant="outline-info" onClick={() => handleShareClick(member.groupDto.id)}>
-                  Share
-                </Button>
+                    <Button variant="primary" className="me-2" href={`/track/${member.groupDto.id}`}>
+                      Track Submission
+                    </Button>
+                  )}
+                  <Button variant="outline-info" onClick={() => handleShareClick(member.groupDto.id)}>
+                    Share
+                  </Button>
+                </div>
               </ListGroup.Item>
             ))}
-
-            
           </ListGroup>
         ) : (
           <EmptyGroupsComponent />

@@ -32,7 +32,7 @@ const QuestionnaireModal: React.FC<QuestionnaireModalProps> = ({
 }) => {
   const currentSectionData = data[currentSection];
   const isFirstSection = currentSection === 0;
-  const progress = ((currentSection + 1) / data.length) * 100;
+  const progress = Math.round(((currentSection + 1) / data.length) * 100);
 
   return (
     <Modal show={showModal} onHide={onClose} backdrop="static" keyboard={false}>
