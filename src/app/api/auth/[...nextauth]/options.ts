@@ -8,14 +8,15 @@ import { cookies } from 'next/headers'
 async function login(credentials: { username: string, password: string }) {
     try {
         console.log('IN CREDENTIALS LOGIN');
+        console.log(credentials);
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(credentials)
         };
         console.log('calling this url');
-        console.log(`${process.env.NEXT_PUBLIC_FRONTEND_URL}api/auth/signin`);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_FRONTEND_URL}api/auth/signin`, requestOptions);
+        console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signin`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signin`, requestOptions);
         const data = await response.json();
         console.log(JSON.stringify(data));
         return data;
