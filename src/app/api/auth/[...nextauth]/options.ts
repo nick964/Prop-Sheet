@@ -63,6 +63,7 @@ export const options: NextAuthOptions = {
                 };
                 const user = await login(creds);
                 console.log('user');
+                console.log('logging this in my username callback');
                 console.log(user);
                 
                 if (user) {
@@ -110,75 +111,78 @@ export const options: NextAuthOptions = {
                 console.log('outh sign up now in sign in form');
                 console.log('profile');
                 console.log(profile);
+                console.log('logging provider');
+                console.log(account.provider);
                 
                 var username = '';
                 var name = '';
-                if(account.provider === 'twitter') {
-                    const nameData = user.name ?? '';
-                    const nameDataArray = nameData.split(',');
-                    name = nameDataArray[0] || '';
-                    username = nameDataArray[1] || '';
-                } else {
-                    name = profile?.name || '';
-                    username = profile?.email || '';
+                if(!(account.provider === 'credentials')) {
+                    if(account.provider === 'twitter') {
+                        const nameData = user.name ?? '';
+                        const nameDataArray = nameData.split(',');
+                        name = nameDataArray[0] || '';
+                        username = nameDataArray[1] || '';
+                    } else {
+                        name = profile?.name || '';
+                        username = profile?.email || '';
+                    }
+                    const email = profile?.email || '';
+                    const credentials = {
+                        username:  username,
+                        name: name,
+                        email: email,
+                        provider: account?.provider,
+                        img: profile?.image || ''
+                    };
+                    console.log('credentials before oauth login - this creates the user if they do not exist');
+                    console.log(credentials);
+                    const returnedUser = await oauthlogin(credentials);
+                    console.log('returnedUser in sign in');
+                    console.log(returnedUser);
+                    if(returnedUser != null && returnedUser.success === false) {
+                        const errorMessage = returnedUser.errorMessage;
+                        return ('/signup-conflict?message=' + errorMessage);
+                    }
                 }
-                const email = profile?.email || '';
-                const credentials = {
-                    username:  username,
-                    name: name,
-                    email: email,
-                    provider: account?.provider,
-                    img: profile?.image || ''
-                };
-                console.log('credentials before oauth login');
-                console.log(credentials);
-                const returnedUser = await oauthlogin(credentials);
-                console.log('returnedUser in sign in');
-                console.log(returnedUser);
-            } else {
-                console.log('normal sign in');
-            }
-
-
-            console.log('user');
-            console.log(user);
-
+            } 
             return true;
         },
         async jwt({ token, user, account, profile }) {
-            console.log('now im in jwt');
-            console.log('JWT');
-            console.log(token);
             if (user != null && !token.accessToken) {
-                console.log('CALLING OAUTH NOW IN JWT FUNCTION');
                 var username = '';
                 var name = '';
-                if(account != null && account.provider === 'twitter') {
-                    const nameData = user.name ?? '';
-                    const nameDataArray = nameData.split(',');
-                    name = nameDataArray[0] || '';
-                    username = nameDataArray[1] || '';
+                if(account != null && account.provider != 'credentials') {
+                    if(account != null && account.provider === 'twitter') {
+                        const nameData = user.name ?? '';
+                        const nameDataArray = nameData.split(',');
+                        name = nameDataArray[0] || '';
+                        username = nameDataArray[1] || '';
+                    } else {
+                        name = profile?.name || '';
+                        username = profile?.email || '';
+                    }
+                    const email = profile?.email || '';
+                    const credentials = {
+                        username: username,
+                        name: name,
+                        email: token.email,
+                        provider: account?.provider,
+    
+                    };
+                    console.log('log credentials');
+                    console.log(credentials);
+                    console.log('CALLING OAUTH NOW IN JWT FUNCTION');
+                    const returnedUser = await oauthlogin(credentials);
+                    console.log('returnedUser');
+                    console.log(returnedUser);
+                    if (returnedUser) {
+                        token.accessToken = returnedUser.token;
+                        token.refreshToken = returnedUser.refreshToken;
+                    }
                 } else {
-                    name = profile?.name || '';
-                    username = profile?.email || '';
-                }
-                const email = profile?.email || '';
-                const credentials = {
-                    username: username,
-                    name: name,
-                    email: token.email,
-                    provider: account?.provider,
-
-                };
-                console.log('log credentials');
-                console.log(credentials);
-
-                const returnedUser = await oauthlogin(credentials);
-                console.log('returnedUser');
-                console.log(returnedUser);
-                if (returnedUser) {
-                    token.accessToken = returnedUser.token;
-                    token.refreshToken = returnedUser.refreshToken;
+                    console.log('setting token in jwt function');
+                    console.log(user.token);
+                    token.accessToken = user.token;
                 }
             }
             return token;

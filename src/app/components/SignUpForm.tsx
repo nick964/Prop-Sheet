@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { Container, Col, Row, Button} from "react-bootstrap";
+import { Container, Col, Row, Button, Modal} from "react-bootstrap";
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
@@ -22,6 +22,7 @@ interface GroupFormProps {
 
 const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
   const router = useRouter();
+  const [showModal, setShowModal] = React.useState(false);
 
   const initialValues: SignUpFormValues = {
     firstName: '',
@@ -63,7 +64,8 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
       console.log(res);
       if (res.ok) {
         console.log('success');
-        router.push('/api/auth/signin/credentials');
+        setShowModal(true);
+       
       } else {
         console.log('error');
       }
@@ -73,7 +75,13 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
 
   };
 
+  const handleClose = () => {
+    setShowModal(false);
+    router.push('/api/auth/signin/credentials');
+  };
+
   return (
+    <>
     <Container>
       <Row className="justify-content-md-center mt-5">
         <Col md={6}>
@@ -135,6 +143,21 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
         </Col>
       </Row>
     </Container>
+
+    <Modal show={showModal} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Sign Up Successful</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>Woohoo, you're successfully signed up! Please go to the sign up page to login.</Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" onClick={handleClose}>
+          OK
+        </Button>
+      </Modal.Footer>
+    </Modal>
+    </>
+
+    
 
   );
 };

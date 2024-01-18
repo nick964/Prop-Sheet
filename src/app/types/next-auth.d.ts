@@ -10,4 +10,19 @@ declare module "next-auth" {
       accessToken: string
     }
   }
+
+    /**
+   * Extends the built-in JWT types with additional properties
+   */
+    interface JWT {
+      id?: string;
+      token?: string; // Adding the token property
+    }
+  
+    /**
+     * Extends the built-in User types with additional properties
+     */
+    interface User {
+      token?: string; // Adding the token property
+    }
 }
