@@ -148,7 +148,7 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
       <Modal.Header closeButton>
         <Modal.Title>Sign Up Successful</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Woohoo, you're successfully signed up! Please go to the sign up page to login.</Modal.Body>
+      <Modal.Body>Woohoo, you are successfully signed up! Please go to the sign up page to login.</Modal.Body>
       <Modal.Footer>
         <Button variant="primary" onClick={handleClose}>
           OK
