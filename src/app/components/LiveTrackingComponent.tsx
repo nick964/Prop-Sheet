@@ -1,6 +1,7 @@
 // Import necessary libraries and components
 import React from 'react';
 import { Container, Row, Col, ListGroup } from 'react-bootstrap';
+import { TrackingResponse } from '../models/tracking-response';
 
 interface Response {
   questionText: string;
@@ -13,15 +14,13 @@ interface Response {
 }
 
 interface LiveTrackingProps {
-  position: number;
-  totalScore: number;
-  responses: Response[];
+  data: TrackingResponse | null;
 }
 
-const LiveTracking: React.FC<LiveTrackingProps> = ({ position, totalScore, responses }) => {
+const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
   // Organize responses by section
   const sections: { [key: string]: Response[] } = {};
-  responses.forEach((response) => {
+  data?.responses.forEach((response) => {
     if (!sections[response.section]) {
       sections[response.section] = [];
     }
@@ -40,8 +39,15 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({ position, totalScore, respo
       <h2>Live Submission Tracking</h2>
       <Row className="mb-3">
         <Col>
+          <h3>Group  {data?.groupDetails?.name} Details</h3>
+          <p>Current Leader: {data?.groupDetails?.inLead?.name}</p>
+          <p>{data?.groupDetails?.inLead?.name}'s score: {data?.groupDetails?.inLead?.score}</p>
+        </Col>
+      </Row>
+      <Row className="mb-3">
+        <Col>
           <p>
-            Group Position: {position} | Total Score: {totalScore}
+            Group Position: {data?.position} | Total Score: {data?.totalScore}
           </p>
         </Col>
       </Row>

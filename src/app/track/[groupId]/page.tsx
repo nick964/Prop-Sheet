@@ -6,13 +6,10 @@ import { useState, useEffect } from 'react';
 import LiveTracking from '../../components/LiveTrackingComponent';
 import { Spinner } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
+import { TrackingResponse } from '@/app/models/tracking-response';
 
 export default function Page() {
-  const [liveTrackingData, setLiveTrackingData] = useState({
-    position: 0,
-    totalScore: 0,
-    responses: [],
-  });
+  const [liveTrackingData, setLiveTrackingData] = useState<TrackingResponse | null>(null);
   const { data: session, status } = useSession();
   const accessToken = session?.user?.accessToken;
   const [loading, setLoading] = useState(true);
@@ -22,13 +19,16 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log('calling this url for tracking data');
         const requestOptions = {
           method: 'GET',
           headers: { 'Authorization': `Bearer ${accessToken}` }
         };
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}members/track?groupId=${groupId}`, requestOptions);
-        const data = await response.json();
-        setLiveTrackingData(data);
+        const result: TrackingResponse = await response.json();
+        console.log('logging result for tracking data');
+        console.log(result);
+        setLiveTrackingData(result);
       } catch (error) {
         console.error('Error fetching tracking data:', error);
       } finally {
@@ -55,7 +55,7 @@ export default function Page() {
           </Spinner>
         </div>
       ) : (
-        <LiveTracking {...liveTrackingData} />
+        <LiveTracking data={liveTrackingData} />
       )}
     </div>
   );

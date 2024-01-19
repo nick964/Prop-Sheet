@@ -8,7 +8,8 @@ interface GroupDto {
     icon: string | null;
   }
 
-interface Member {
+export interface Member {
+    name: string;
     questionId: number | null;
     answer: string | null;
     submission_status: Number | null;
@@ -19,4 +20,5 @@ interface Member {
 
 export interface ProfileResponse {
     members: Member[]
+    gameStarted: boolean;
 }

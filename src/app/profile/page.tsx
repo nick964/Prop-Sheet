@@ -36,7 +36,10 @@ useEffect(() => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}users/profile`, requestOptions);
 
           if (response.ok) {
+            //Call url to chck if game started
+            const gameStartedResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}config/started`, requestOptions);
             const result: ProfileResponse = await response.json();
+            result.gameStarted = await gameStartedResponse.json();
             setProfileResponse(result);
           } else {
             setError('Failed to fetch data from the API');

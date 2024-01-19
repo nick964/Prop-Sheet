@@ -23,6 +23,10 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
   const [selectedShareOption, setSelectedShareOption] = useState('');
   const [showUserSearchModal, setShowUserSearchModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [isGameStarted, setIsGameStarted] = useState(profileData.gameStarted);
+  console.log('lgging profile data');
+  console.log(profileData);
 
   if(session?.user?.accessToken == null) {
     router.push('/api/auth/signin/credentials');
@@ -124,6 +128,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
 
 
   return (
+    <>
     <Card className={`${styles.card} shadow-sm`}>
       <Card.Header className="bg-primary text-white">Your Groups</Card.Header> {/* Colorful header */}
       <Card.Body>
@@ -146,7 +151,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
                 </div>
                 <div className="d-flex flex-column flex-sm-row">
                 {member.submission_status == 0 ? (
-                  <Button variant="primary" className="me-2 btn-mobile" href={`/submit/${member.groupDto.id}`}>
+                  <Button variant="primary" className="me-2 btn-mobile" href={`/submit/${member.groupDto.id}`} disabled={isGameStarted}>
                     Submit Now
                   </Button>
                   ) : (
@@ -249,6 +254,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
       </Modal>
 
     </Card>
+    </>
   );
 };
 
