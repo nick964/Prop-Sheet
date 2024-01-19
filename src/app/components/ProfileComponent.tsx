@@ -35,6 +35,18 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
     setShowModal(true);
   };
 
+  const handleCopyInviteLink = async () => {
+    const inviteLink = "https://www.superbowlproptracker.com/signup?groupid=" + selectedGroup; // Replace with your actual invite link
+  
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      alert("Invite link copied to clipboard!"); // Or update the UI to show confirmation
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+      alert("Failed to copy the link. Please try again."); // Or handle the error in the UI
+    }
+  };
+
     // Add additional handlers and logic as needed
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -132,13 +144,13 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
                     </p>
                   </div>
                 </div>
-                <div>
+                <div className="d-flex flex-column flex-sm-row">
                 {member.submission_status == 0 ? (
-                  <Button variant="primary" className="me-2" href={`/submit/${member.groupDto.id}`}>
+                  <Button variant="primary" className="me-2 btn-mobile" href={`/submit/${member.groupDto.id}`}>
                     Submit Now
                   </Button>
                   ) : (
-                    <Button variant="primary" className="me-2" href={`/track/${member.groupDto.id}`}>
+                    <Button variant="primary" className="me-2 btn-mobile" href={`/track/${member.groupDto.id}`}>
                       Track Submission
                     </Button>
                   )}
@@ -170,6 +182,11 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
           <Button variant="outline-info" onClick={() => handleShareOptionClick('existingUser')}>
             Invite Existing User
           </Button>
+          <Button variant="outline-info" onClick={handleCopyInviteLink}>
+            Copy Invite Link
+          </Button>
+    
+    
 
           {selectedShareOption === 'email' && (
             <Form onSubmit={handleFormSubmit}>

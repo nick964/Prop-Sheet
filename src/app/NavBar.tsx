@@ -18,8 +18,8 @@ export default function NavBar() {
         <Navbar.Brand as={Link} href="/" style={{color: "white"}}>
           Super Bowl Prop Tracker
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="main-navbar" />
-        <Navbar.Collapse id="main-navbar">
+        <Navbar.Toggle aria-controls="main-navbar" style={{ backgroundColor: 'white' }}/>
+        <Navbar.Collapse id="main-navbar" >
           <Nav className="mr-auto">
             <Nav.Link as={Link} href="/profile" active={pathname === '/profile'} style={{color: "white"}}>
               Profile
