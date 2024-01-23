@@ -47,7 +47,7 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
             </h3>
             <div className="leader-details">
               <p className="current-leader">Current Leader: <strong>{data?.groupDetails?.inLead?.name}</strong></p>
-              <p className="leader-score">{data?.groupDetails?.inLead?.name}'s score: <strong>{data?.groupDetails?.inLead?.score}</strong></p>
+              <p className="leader-score">{data?.groupDetails?.inLead?.name}&apos;s score: <strong>{data?.groupDetails?.inLead?.score}</strong></p>
             </div>
           </Col>
         </Row>
