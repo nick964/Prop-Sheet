@@ -16,6 +16,7 @@ interface Response {
   className: string;
   isCorrect: boolean;
   correct: boolean;
+  lineValue: number;
 }
 
 export interface TrackingResponse {

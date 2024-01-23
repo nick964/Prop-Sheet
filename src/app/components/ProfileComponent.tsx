@@ -1,6 +1,6 @@
 // Import necessary libraries and components
 import React, { useState} from 'react';
-import { Card, ListGroup, Button, Modal, Form, Spinner } from 'react-bootstrap';
+import { Card, ListGroup, Button, Modal, Form, Spinner, Row, Col } from 'react-bootstrap';
 import { ProfileResponse } from '../models/profile-response';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -129,47 +129,59 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
 
   return (
     <>
+
+    {isGameStarted && (
+      <div className='mb-5 mt-5 text-center'>
+        <Card className={`${styles.card} shadow-sm`}>
+          <Card.Header className="bg-danger text-white">Game Status</Card.Header> {/* Colorful header */}
+          <Card.Body>
+            <p className="text-danger">The game has already started! You can no longer submit your picks.</p>
+          </Card.Body>
+        </Card>
+      </div>
+    )}
     <Card className={`${styles.card} shadow-sm`}>
       <Card.Header className="bg-primary text-white">Your Groups</Card.Header> {/* Colorful header */}
       <Card.Body>
-        {profileData.members.length > 0 ? (
-          <ListGroup>
-            {profileData.members.map((member, index) => (
-              <ListGroup.Item key={index} className="list-group-item d-flex align-items-center justify-content-between">
-                <div className="flex-grow-1 me-3">
-                  <h5>
-                    <Link href={member.submission_status === 0 ? `/submit/${member.groupDto.id}` : `/track/${member.groupDto.id}`}>
-                      {`Group: ${member.groupDto.name}`}
-                    </Link>
-                  </h5>
-                  {member.icon && <img src={member.icon} alt="Group Icon" className="group-icon img-fluid" />}
-                  <div>
-                    <p className={`${member.submission_status == 0 ? 'text-danger' : 'text-success'}`}>
-                      {member.submission_status == 0 ? 'You have not yet submitted' : `Submission Status: Submitted! Score: ${member.score}`}
-                    </p>
-                  </div>
-                </div>
-                <div className="d-flex flex-column flex-sm-row">
-                {member.submission_status == 0 ? (
-                  <Button variant="primary" className="me-2 btn-mobile" href={`/submit/${member.groupDto.id}`} disabled={isGameStarted}>
-                    Submit Now
-                  </Button>
-                  ) : (
-                    <Button variant="primary" className="me-2 btn-mobile" href={`/track/${member.groupDto.id}`}>
-                      Track Submission
-                    </Button>
-                  )}
-                  <Button variant="outline-info" onClick={() => handleShareClick(member.groupDto.id)}>
-                    Share
-                  </Button>
-                </div>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        ) : (
-          <EmptyGroupsComponent />
-        )}
-      </Card.Body>
+  {profileData.members.length > 0 ? (
+    <div>
+      {profileData.members.map((member, index) => (
+        <Row key={index} className="align-items-center mb-3"> {/* Each member is a row */}
+          <Col md={8} className="mb-2 mb-md-0"> {/* Adjust sizes as per your need */}
+            <h5>
+              <Link href={member.submission_status === 0 ? `/submit/${member.groupDto.id}` : `/track/${member.groupDto.id}`}>
+                {`Group: ${member.groupDto.name}`}
+              </Link>
+            </h5>
+            {member.icon && <img src={member.icon} alt="Group Icon" className="group-icon img-fluid" />}
+            <p className={`${member.submission_status == 0 ? 'text-danger' : 'text-success'}`}>
+              {member.submission_status == 0 ? 'You have not yet submitted' : `Submission Status: Submitted! Score: ${member.score}`}
+            </p>
+          </Col>
+          <Col md={4} className="text-md-end"> {/* Buttons Column */}
+            <div className="d-flex flex-column flex-md-row justify-content-md-end">
+              {member.submission_status == 0 ? (
+                <Button variant="primary" className="me-2 mb-2 mb-md-0" href={`/submit/${member.groupDto.id}`} disabled={isGameStarted}>
+                  Submit Now
+                </Button>
+              ) : (
+                <Button variant="primary" className="me-2 mb-2 mb-md-0" href={`/track/${member.groupDto.id}`}>
+                  Track Submission
+                </Button>
+              )}
+              <Button variant="outline-info" onClick={() => handleShareClick(member.groupDto.id)}>
+                Share
+              </Button>
+            </div>
+          </Col>
+        </Row>
+      ))}
+    </div>
+  ) : (
+    <EmptyGroupsComponent />
+  )}
+</Card.Body>
+
 
         {/* Modal for sharing */}
         <Modal show={showModal} onHide={handleCloseModal}>
@@ -178,20 +190,28 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
         </Modal.Header>
         <Modal.Body>
           <p>Invite others to join this group:</p>
-          <Button variant="outline-info" onClick={() => handleShareOptionClick('email')}>
-            Invite via Email
-          </Button>{' '}
-          <Button variant="outline-info" onClick={() => handleShareOptionClick('sms')}>
-            Invite via SMS
-          </Button>{' '}
-          <Button variant="outline-info" onClick={() => handleShareOptionClick('existingUser')}>
-            Invite Existing User
-          </Button>
-          <Button variant="outline-info" onClick={handleCopyInviteLink}>
-            Copy Invite Link
-          </Button>
-    
-    
+          <Row>
+            <Col>
+              <Button variant="secondary" onClick={() => handleShareOptionClick('email')}>
+                Email
+              </Button>{' '}
+            </Col>
+            <Col>
+              <Button variant="secondary" onClick={() => handleShareOptionClick('existingUser')}>
+                Existing User
+              </Button>
+            </Col>
+            <Col>
+              <Button variant="secondary" onClick={handleCopyInviteLink}>
+                Copy Link
+              </Button>
+            </Col>
+            <Col>
+              <Button variant="secondary" onClick={() => handleShareOptionClick('sms')}>
+                SMS
+              </Button>
+            </Col>
+          </Row>
 
           {selectedShareOption === 'email' && (
             <Form onSubmit={handleFormSubmit}>

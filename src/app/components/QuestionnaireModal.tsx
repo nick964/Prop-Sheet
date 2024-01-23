@@ -1,7 +1,7 @@
 // components/QuestionnaireModal.tsx
 
 import React from 'react';
-import { Modal, Button, Alert, ProgressBar, Form, Spinner } from 'react-bootstrap';
+import { Modal, Button, Alert, ProgressBar, Form, Spinner, Row, Col } from 'react-bootstrap';
 import { QuestionSection } from '../models/question-section';
 import styles from './SubmitComponent.module.css';
 
@@ -30,6 +30,20 @@ const QuestionnaireModal: React.FC<QuestionnaireModalProps> = ({
   sectionError,
   handleResponse,
 }) => {
+  const mapOptionLabel = (option: string) => {
+    switch (option) {
+      case 'O':
+        return 'Over';
+      case 'U':
+        return 'Under';
+      case 'Y':
+        return 'Yes';
+      case 'N':
+        return 'No';
+      default:
+        return option;
+    }
+  }
   const currentSectionData = data[currentSection];
   const isFirstSection = currentSection === 0;
   const progress = Math.round(((currentSection + 1) / data.length) * 100);
@@ -42,24 +56,34 @@ const QuestionnaireModal: React.FC<QuestionnaireModalProps> = ({
       <Modal.Body className={'modal-content'} key={currentSection}>
         <ProgressBar now={progress} label={`${progress}%`} />
         {currentSectionData.questions.map((question) => (
-          <Form key={question.id}>
-            <Form.Group controlId={question.id}>
-              <Form.Label>
-                {question.text}
-                {question.lineValue !== null && `: ${question.lineValue}`}
-              </Form.Label>
-              {question.options.map((option) => (
-                <Form.Check
-                  key={option}
-                  type="radio"
-                  label={option}
-                  name={`question-${question.id}`}
-                  checked={userResponses[currentSection]?.[question.id] === option}
-                  onChange={() => handleResponse(question.id, option)}
-                />
-              ))}
-            </Form.Group>
-          </Form>
+          <div key={question.id} className='mb-2 mt-2'>
+            <Form key={question.id}>
+              <Form.Group controlId={question.id}>
+                <Form.Label >
+                  <b>
+                  {question.text}
+                  {question.lineValue !== null && `: ${question.lineValue}`}
+                  </b>
+                </Form.Label>
+                <Row>              
+                {question.options.map((option) => (
+                  <Col
+                    key={option}
+                  >
+                  <Form.Check
+                    key={option}
+                    type="radio"
+                    label={mapOptionLabel(option)}
+                    name={`question-${question.id}`}
+                    checked={userResponses[currentSection]?.[question.id] === option}
+                    onChange={() => handleResponse(question.id, option)}
+                  />
+                  </Col>
+                ))}
+                </Row>
+              </Form.Group>
+            </Form>
+          </div>
         ))}
       </Modal.Body>
       <Modal.Footer>

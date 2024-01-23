@@ -11,6 +11,7 @@ interface Response {
   className: string;
   isCorrect: boolean;
   correct: boolean;
+  lineValue: number;
 }
 
 interface LiveTrackingProps {
@@ -36,21 +37,31 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
 
   return (
     <Container className="mt-4">
-      <h2>Live Submission Tracking</h2>
-      <Row className="mb-3">
-        <Col>
-          <h3>Group  {data?.groupDetails?.name} Details</h3>
-          <p>Current Leader: {data?.groupDetails?.inLead?.name}</p>
-          <p>{data?.groupDetails?.inLead?.name}s score: {data?.groupDetails?.inLead?.score}</p>
-        </Col>
-      </Row>
-      <Row className="mb-3">
-        <Col>
-          <p>
-            Group Position: {data?.position} | Total Score: {data?.totalScore}
-          </p>
-        </Col>
-      </Row>
+      <div className="live-tracking-container">
+        <h2 className="live-tracking-header">Live Submission Tracking</h2>
+        
+        <Row className="mb-4 live-tracking-group-details">
+          <Col>
+            <h3 className="group-name-title">
+              Group: <span className="group-name">{data?.groupDetails?.name}</span>
+            </h3>
+            <div className="leader-details">
+              <p className="current-leader">Current Leader: <strong>{data?.groupDetails?.inLead?.name}</strong></p>
+              <p className="leader-score">{data?.groupDetails?.inLead?.name}'s score: <strong>{data?.groupDetails?.inLead?.score}</strong></p>
+            </div>
+          </Col>
+        </Row>
+        
+        <Row className="mb-3">
+          <Col>
+            <div className="user-details">
+              <p>
+                Group Position: <strong>{data?.position}</strong> | Total Score: <strong>{data?.totalScore}</strong>
+              </p>
+            </div>
+          </Col>
+        </Row>
+      </div>
 
       <Row>
         {Object.entries(sections).map(([section, sectionResponses]) => (
@@ -59,7 +70,10 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
             <ListGroup>
               {sectionResponses.map((response, index) => (
                 <ListGroup.Item key={index} className={response.className}>
-                  <strong>{response.questionText}</strong>
+                  <strong>{response.questionText}
+                  {response.lineValue ? ` (Line: ${response.lineValue})` : ""}
+                  </strong>
+
                   <br />
                   Your Answer: {response.answer}
                   <br />
