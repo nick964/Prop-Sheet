@@ -126,13 +126,22 @@ export const options: NextAuthOptions = {
                         name = profile?.name || '';
                         username = profile?.email || '';
                     }
+                    var myImage = '';
+                    if(account.provider === 'twitter') {
+                        myImage = profile?.image || '';
+                    } else if (account.provider === 'google') {
+                        myImage = profile?.picture || '';
+                    } else if (account.provider === 'facebook') {
+                        myImage = user?.image || '';
+                    }
+
                     const email = profile?.email || '';
                     const credentials = {
                         username:  username,
                         name: name,
                         email: email,
                         provider: account?.provider,
-                        img: profile?.image || ''
+                        img: myImage
                     };
                     console.log('credentials before oauth login - this creates the user if they do not exist');
                     console.log(credentials);

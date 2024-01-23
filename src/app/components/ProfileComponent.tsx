@@ -154,6 +154,9 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
               </Link>
             </h5>
             {member.icon && <img src={member.icon} alt="Group Icon" className="group-icon img-fluid" />}
+            <p>
+              Member Count: <strong>{member.groupDto.memberCount}</strong>
+            </p>
             <p className={`${member.submission_status == 0 ? 'text-danger' : 'text-success'}`}>
               {member.submission_status == 0 ? 'You have not yet submitted' : `Submission Status: Submitted! Score: ${member.score}`}
             </p>

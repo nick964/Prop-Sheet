@@ -25,4 +25,11 @@ declare module "next-auth" {
     interface User {
       token?: string; // Adding the token property
     }
+
+    /**
+     * Extends the built-in User types with additional properties
+     */
+    interface Profile {
+          picture?: string; // Adding the token property
+    }
 }

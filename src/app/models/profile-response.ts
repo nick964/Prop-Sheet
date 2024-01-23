@@ -5,6 +5,7 @@ interface GroupDto {
     name: string;
     groupKey: string;
     groupRole: number;
+    memberCount: number;
     icon: string | null;
   }
 
