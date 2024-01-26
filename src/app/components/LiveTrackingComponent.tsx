@@ -35,6 +35,8 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
     sections[response.section].push(response);
   });
 
+
+
   return (
     <Container className="mt-4">
       <div className="live-tracking-container">
@@ -46,6 +48,9 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
               Group: <span className="group-name">{data?.groupDetails?.name}</span>
             </h3>
             <div className="leader-details">
+            {data?.position == 1 && (
+              <p className="lead-message">You are currently in the lead!!</p>
+            )}
               <p className="current-leader">Current Leader: <strong>{data?.groupDetails?.inLead?.name}</strong></p>
               <p className="leader-score">{data?.groupDetails?.inLead?.name}&apos;s score: <strong>{data?.groupDetails?.inLead?.score}</strong></p>
             </div>

@@ -14,6 +14,7 @@ interface SignUpFormValues {
   email: string;
   password: string;
   groupId: string;
+  profilePicture?: File | null;
 }
 
 interface GroupFormProps {
@@ -23,6 +24,7 @@ interface GroupFormProps {
 const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
   const router = useRouter();
   const [showModal, setShowModal] = React.useState(false);
+  const [profilePicture, setProfilePicture] = React.useState<File | null>(null);
 
   const initialValues: SignUpFormValues = {
     firstName: '',
@@ -30,6 +32,7 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
     email: '',
     password: '',
     groupId: groupId,
+    profilePicture: null,
   };
 
   const validationSchema = Yup.object().shape({
@@ -38,6 +41,11 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
     email: Yup.string().email('Invalid email address').required('Email is required'),
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
   });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
+    setProfilePicture(file); // Update the state with the new file
+  };
 
   const handleSignIn = async (provider: string, groupId: string) => {
     console.log('logging groupId handle sign in');
@@ -51,15 +59,24 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
 
   const handleSubmit = async (values: SignUpFormValues, { resetForm }: { resetForm: () => void }) => {
     // Handle form submission here (e.g., send data to a server)
-    console.log('am i in here?');
-    console.log(values);
-    console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signup`);
+    const formData = new FormData();
+
+     // Append all form fields to the formData object
+     Object.keys(values).forEach(key => {
+      const value = values[key as keyof typeof values];
+      if (key !== 'picture' && value !== undefined && value !== null) {
+        // Append only if value is not undefined and not null
+        formData.append(key, value.toString()); // Convert value to string
+      }
+    });
+
+    if (profilePicture) {
+      formData.append('picture', profilePicture, profilePicture.name); // Append the file to the formData
+    }
+
     const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signup`, {
       method: 'POST',
-      body: JSON.stringify(values),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      body: formData,
     }).then((res) => {
       console.log(res);
       if (res.ok) {
@@ -118,6 +135,14 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
           </label>
           <Field type="password" className="form-control" id="password" name="password" />
           <ErrorMessage name="password" component="div" className="text-danger" />
+        </div>
+
+        <div className="mb-3">
+            <label htmlFor="picture" className="form-label">
+              Picture
+            </label>
+            <input id="picture" name="picture" type="file" onChange={handleFileChange} className="form-control" />
+            <ErrorMessage name="picture" component="div" className="text-danger" />
         </div>
 
           <Field type="hidden" className="form-control" id="groupId" name="groupId" value={groupId} />

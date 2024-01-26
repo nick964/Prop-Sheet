@@ -39,6 +39,14 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
     setShowModal(true);
   };
 
+  const showDefaultIcon = (icon: string | null) => {
+    if(icon == null || icon == '') {
+      return "/images/DefaultGroupIcon.png";
+    } else {
+      return icon;
+    }
+  }
+
   const handleCopyInviteLink = async () => {
     const inviteLink = "https://www.superbowlproptracker.com/signup?groupid=" + selectedGroup; // Replace with your actual invite link
   
@@ -149,9 +157,16 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
         <Row key={index} className="align-items-center mb-3"> {/* Each member is a row */}
           <Col md={8} className="mb-2 mb-md-0"> {/* Adjust sizes as per your need */}
             <h5>
+              <img 
+              src={showDefaultIcon(member.groupDto.icon)}
+                alt="Group Icon" 
+                className="rounded-circle me-2"
+                style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+              />
               <Link href={member.submission_status === 0 ? `/submit/${member.groupDto.id}` : `/track/${member.groupDto.id}`}>
                 {`Group: ${member.groupDto.name}`}
               </Link>
+
             </h5>
             {member.icon && <img src={member.icon} alt="Group Icon" className="group-icon img-fluid" />}
             <p>
