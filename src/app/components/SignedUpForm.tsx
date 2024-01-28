@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Container, Col, Row, Button} from "react-bootstrap";
 
@@ -9,6 +10,7 @@ interface SignedUpFormProps {
 }
 
 const SignedUpForm: React.FC<SignedUpFormProps> = ({ groupId }) => {
+  const router = useRouter();
   const { data: session, status } = useSession();
   console.log('loggin session details in signed up form');
   console.log(JSON.stringify(session));
@@ -28,7 +30,7 @@ const SignedUpForm: React.FC<SignedUpFormProps> = ({ groupId }) => {
 
           if (response.ok) {
             console.log('your are added to the group');
-            console.log(response);
+            router.push('/profile');
           } else {
             console.error('Failed to fetch data from the API');
           }
