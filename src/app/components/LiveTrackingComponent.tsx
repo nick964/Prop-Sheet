@@ -3,6 +3,7 @@ import React from 'react';
 import { Container, Row, Col, ListGroup } from 'react-bootstrap';
 import { TrackingResponse } from '../models/tracking-response';
 
+
 interface Response {
   questionText: string;
   section: string;
@@ -40,7 +41,7 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
   return (
     <Container className="mt-4">
       <div className="live-tracking-container">
-        <h2 className="live-tracking-header">Live Submission Tracking</h2>
+        <h2 className="live-tracking-header tracking">Live Submission Tracking</h2>
         
         <Row className="mb-4 live-tracking-group-details">
           <Col>
@@ -57,12 +58,17 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
           </Col>
         </Row>
         
-        <Row className="mb-3">
-          <Col>
-            <div className="user-details">
-              <p>
-                Group Position: <strong>{data?.position}</strong> | Total Score: <strong>{data?.totalScore}</strong>
-              </p>
+        <Row className="mb-3 scoreHighlightRow">
+          <Col md={12} className="scoreHighlightCol">
+            <div className="user-details groupPosition">
+              <h3>
+                Group Position: <span className="positionNumber">{data?.position}</span>
+              </h3>
+            </div>
+            <div className="totalScore">
+              <h3>
+                Total Score: <span className="scoreNumber">{data?.totalScore}</span>
+              </h3>
             </div>
           </Col>
         </Row>
@@ -71,21 +77,23 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
       <Row>
         {Object.entries(sections).map(([section, sectionResponses]) => (
           <Col key={section} md={6}>
-            <h3>{section}</h3>
-            <ListGroup>
-              {sectionResponses.map((response, index) => (
-                <ListGroup.Item key={index} className={response.className}>
-                  <strong>{response.questionText}
-                  {response.lineValue ? ` (Line: ${response.lineValue})` : ""}
-                  </strong>
+            <div className="mt-4">
+              <h3 className="text-center tracking">{section}</h3>
+              <ListGroup>
+                {sectionResponses.map((response, index) => (
+                  <ListGroup.Item key={index} className={response.className}>
+                    <strong>{response.questionText}
+                    {response.lineValue ? ` (Line: ${response.lineValue})` : ""}
+                    </strong>
 
-                  <br />
-                  Your Answer: {response.answer}
-                  <br />
-                  Correct Answer: {response.correctAnswer}
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
+                    <br />
+                    Your Answer: {response.answer}
+                    <br />
+                    Correct Answer: {response.correctAnswer}
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </div>
           </Col>
         ))}
       </Row>

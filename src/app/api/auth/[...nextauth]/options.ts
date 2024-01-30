@@ -3,7 +3,6 @@ import GoogleProvider from "next-auth/providers/google";
 import TwitterProvider from "next-auth/providers/twitter";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { cookies } from 'next/headers'
 
 async function login(credentials: { username: string, password: string }) {
     try {
@@ -128,7 +127,7 @@ export const options: NextAuthOptions = {
                     }
                     var myImage = '';
                     if(account.provider === 'twitter') {
-                        myImage = profile?.image || '';
+                        myImage = user?.image || '';
                     } else if (account.provider === 'google') {
                         myImage = profile?.picture || '';
                     } else if (account.provider === 'facebook') {

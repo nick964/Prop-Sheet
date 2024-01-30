@@ -106,3 +106,67 @@ img {
   margin-bottom: 0;
   color: #495057; /* Bootstrap gray */
 }
+
+.lead-message {
+  font-size: 1.2em; /* Larger font size */
+  font-weight: bold;
+  color: #28a745; /* Bootstrap success color for emphasis */
+  margin-bottom: 1rem;
+}
+
+.group-position h4,
+.total-score h4 {
+  font-size: 1.2em; /* Larger font size */
+  font-weight: bold;
+  color: #007bff; /* Bootstrap primary color for emphasis */
+  margin: 0.5rem 0; /* Add margin for better spacing */
+}
+
+.user-details {
+  padding: 1rem;
+  background-color: #f8f9fa; /* Light background for the section */
+  border-radius: 0.25rem; /* Rounded corners */
+}
+
+.scoreHighlightRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.scoreHighlightCol {
+  text-align: center;
+}
+
+.groupPosition h3,
+.totalScore h3 {
+  font-size: 1.5rem; /* Large font size */
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+.positionNumber,
+.scoreNumber {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  margin-left: 0.5rem;
+  font-size: 1.5rem; /* Even larger font size for the numbers */
+  color: #fff;
+  background-color: #03293F; /* Bootstrap primary color for emphasis */
+  border-radius: 0.25rem;
+}
+
+/* Add this to your global.css file or a CSS module */
+@font-face {
+  font-family: 'Jersey M54';
+  src: url('/fonts/Jersey_M54.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.tracking {
+  font-family: 'Jersey M54', sans-serif;
+  letter-spacing: 0.12em;
+}

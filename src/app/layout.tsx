@@ -7,6 +7,7 @@ import Provider from './context/client-provider';
 import { getServerSession } from "next-auth/next";
 import { options } from './api/auth/[...nextauth]/options'; // ⚠️ Make sure this is the correct path
 import NavBar from './NavBar';
+import Footer from './components/Footer';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -32,6 +33,7 @@ export default async function RootLayout({
               {children}
             </Container>
             </main>
+            <Footer />
           </Provider>
         </SSRProvider>
       </body>
