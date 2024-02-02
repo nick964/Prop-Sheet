@@ -202,3 +202,26 @@ img {
 .termsCondish {
   font-size: 0.8rem;
 }
+
+/* YourStyleSheet.css */
+@media (min-width: 576px) { /* Adjust this media query as needed */
+  .form-check-label {
+    /* Prevent the text from breaking into multiple lines inside a small grid column */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.form-check {
+  /* Add some padding to the form check for better spacing */
+  padding-right: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-check-label {
+    /* Allow text to wrap on smaller screens */
+    white-space: normal;
+  }
+}

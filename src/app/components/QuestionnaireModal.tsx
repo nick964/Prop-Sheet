@@ -65,9 +65,11 @@ const QuestionnaireModal: React.FC<QuestionnaireModalProps> = ({
                   {question.lineValue !== null && `: ${question.lineValue}`}
                   </b>
                 </Form.Label>
-                <Row>              
+                <Row className='g-3'>              
                 {question.options.map((option) => (
                   <Col
+                    xs={12} sm={6} md={4} lg={3} xl={3} // Responsive grid columns
+                    className="d-flex" // This will help with aligning the label and input
                     key={option}
                   >
                   <Form.Check
@@ -77,6 +79,7 @@ const QuestionnaireModal: React.FC<QuestionnaireModalProps> = ({
                     name={`question-${question.id}`}
                     checked={userResponses[currentSection]?.[question.id] === option}
                     onChange={() => handleResponse(question.id, option)}
+                    className="flex-grow-1"
                   />
                   </Col>
                 ))}
