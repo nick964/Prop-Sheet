@@ -5,6 +5,7 @@ interface GroupDetails {
   name: string;
   description: string;
   memberCount: number;
+  icon: string | null;
   inLead: Member
 }
 
@@ -25,4 +26,5 @@ export interface TrackingResponse {
     totalScore: number;
     gameStarted: boolean;
     responses: Response[]; 
+
 }

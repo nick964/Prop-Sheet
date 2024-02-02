@@ -23,9 +23,18 @@
 
 html,
 body {
+  height: 100%; /* Make sure html and body are taking the full height */
+  margin: 0;
   max-width: 100vw;
   min-height: 100vh;
 }
+
+body > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 
 body {
   color: rgb(var(--foreground-rgb));
@@ -35,6 +44,19 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+footer {
+  flex-shrink: 0; /* Make sure footer does not shrink */
+  /* Other styles for your footer */
+}
+
+/* Ensure your footer styles are correct */
+footer.mt-auto.py-3.bg-light {
+  background-color: #f8f9fa !important; /* Example background color, adjust as needed */
+  padding: 1rem 0; /* Padding for the footer content */
+  text-align: center; /* Center the footer content */
+  position: relative; /* Relative positioning */
 }
 
 a {
@@ -73,8 +95,14 @@ img {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.live-tracking-image-header{
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers children horizontally in the container */
+  text-align: center; /* Centers the text inside the children */
+}
+
 .live-tracking-header {
-  color: #007bff; /* Bootstrap primary color */
   margin-bottom: 24px;
   text-align: center;
 }

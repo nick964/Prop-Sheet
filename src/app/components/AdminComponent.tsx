@@ -1,6 +1,6 @@
 // Import necessary libraries and components
 import React, { useState, useEffect } from 'react';
-import { Container, Form, Button, Card, Col, Row } from 'react-bootstrap';
+import { Container, Form, Button, Card, Col, Row, Toast, ToastContainer } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
 
 interface Question {
@@ -38,6 +38,21 @@ const AdminPage: React.FC = () => {
   const [configRules, setConfigRules] = useState<ConfigRule[]>([]);
   const [toggleState, setToggleState] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  const handleShowToast = (message: string) => {
+    console.log('showing toast');
+    console.log(message.length);
+    console.log(toastMessage);
+    if(message.length > 0) {
+      setToastMessage(message);
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 5000);
+    }
+  };
 
   const handleToggle = async (config: ConfigRule, newToggleState: boolean) => {
     setIsSubmitting(true);
@@ -154,6 +169,7 @@ const AdminPage: React.FC = () => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}master/add`, requestOptions);
     if (response.ok) {
       console.log('Master answers submitted successfully');
+      handleShowToast("Answers updated successfully!");
     } else {
       console.error('Failed to submit master answers');
     }
@@ -170,6 +186,14 @@ const AdminPage: React.FC = () => {
 
   return (
     <Container className="mt-4">
+      <ToastContainer position="top-end" className="p-3">
+    <Toast show={showToast} delay={5000} autohide onClose={() => setShowToast(false)}>
+      <Toast.Header>
+        <strong className="me-auto">Notification</strong>
+      </Toast.Header>
+      <Toast.Body>{toastMessage}</Toast.Body>
+    </Toast>
+  </ToastContainer>
       <h2>Admin Page - Update Master Answers</h2>
       <hr />
       {configRules.map((config) => (

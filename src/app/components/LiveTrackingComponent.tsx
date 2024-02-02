@@ -1,6 +1,6 @@
 // Import necessary libraries and components
 import React from 'react';
-import { Container, Row, Col, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, ListGroup, Image } from 'react-bootstrap';
 import { TrackingResponse } from '../models/tracking-response';
 
 
@@ -36,17 +36,42 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
     sections[response.section].push(response);
   });
 
+  const showDefaultIcon = (icon: string | null | undefined) => {
+    if(icon == null || icon == '') {
+      return "/images/DefaultGroupIcon.png";
+    } else {
+      return icon;
+    }
+  }
+
 
 
   return (
     <Container className="mt-4">
       <div className="live-tracking-container">
+        <div className="live-tracking-image-header">
+          <Image 
+                    src={"/images/SuperBowl_Header2.png"} 
+                    alt="Group Icon"
+                    fluid
+                    
+            />
+        </div>
+
         <h2 className="live-tracking-header tracking">Live Submission Tracking</h2>
         
         <Row className="mb-4 live-tracking-group-details">
           <Col>
             <h3 className="group-name-title">
-              Group: <span className="group-name">{data?.groupDetails?.name}</span>
+              Group: 
+              <Image 
+                src={showDefaultIcon(data?.groupDetails?.icon)} 
+                alt="Group Icon"
+                roundedCircle // Optional: Makes the image round. Remove if you prefer a square or the original shape.
+                className="group-icon" // Custom class for additional styling if needed
+                style={{ width: '30px', height: '30px', marginRight: '10px' }} // Inline styles for size & spacing, adjust as needed
+              />
+              <span className="group-name">{data?.groupDetails?.name}</span>
             </h3>
             <div className="leader-details">
             {data?.position == 1 && (

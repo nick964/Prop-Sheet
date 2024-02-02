@@ -28,12 +28,14 @@ export default async function RootLayout({
         <SSRProvider>
           <Provider session={session}>
             <NavBar />
-            <main>
-            <Container fluid>
-              {children}
-            </Container>
-            </main>
-            <Footer />
+            <div className="content-wrap"> {/* Add a wrapper for the content */}
+              <main>
+                <Container fluid>
+                  {children}
+                </Container>
+              </main>
+              <Footer />
+            </div>
           </Provider>
         </SSRProvider>
       </body>

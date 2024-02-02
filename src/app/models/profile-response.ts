@@ -17,6 +17,7 @@ export interface Member {
     score: number | null;
     groupDto: GroupDto;
     icon: string | null;
+    groupAdmin: boolean;
   }
 
 export interface ProfileResponse {

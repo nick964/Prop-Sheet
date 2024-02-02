@@ -1,6 +1,8 @@
+"use client"
+
 // Import necessary libraries and components
 import React, { useState} from 'react';
-import { Card, ListGroup, Button, Modal, Form, Spinner, Row, Col } from 'react-bootstrap';
+import { Card, ListGroup, Button, Form, Spinner, Row, Col, Modal } from 'react-bootstrap';
 import { ProfileResponse } from '../models/profile-response';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -16,12 +18,14 @@ const EmptyGroupsComponent: React.FC = () => (
 );
 
 const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
+  console.log('in profile component');
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const { data: session, status } = useSession();
   const [selectedGroup, setSelectedGroup] = useState(0);
   const [selectedShareOption, setSelectedShareOption] = useState('');
   const [showUserSearchModal, setShowUserSearchModal] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isGameStarted, setIsGameStarted] = useState(profileData.gameStarted);
@@ -46,6 +50,11 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
       return icon;
     }
   }
+
+  const handleDeleteClick = (groupId: number) => {
+    setSelectedGroup(groupId);
+    setShowDeleteConfirmation(true);
+  };
 
   const handleCopyInviteLink = async () => {
     const inviteLink = "https://www.superbowlproptracker.com/signup?groupid=" + selectedGroup; // Replace with your actual invite link
@@ -104,6 +113,34 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
   
   
       setIsLoading(false);
+    };
+
+        // Add additional handlers and logic as needed
+    const handleGroupDelete = async () => {
+      setIsLoading(true);
+      console.log('group delete');
+      try {
+        if (accessToken) {
+          const req = {
+              groupId: selectedGroup
+          };
+          const requestOptions = {
+              method: 'POST',
+              headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'},
+              body: JSON.stringify(req) 
+          };
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/delete`, requestOptions);
+        if (response.ok) {
+          console.log('success');
+        } else {
+          console.error('Failed to delete group');
+        }
+        } 
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+      setIsLoading(false);
+      setShowDeleteConfirmation(false);
     };
 
   const handleShareOptionClick = (shareOption: string) => {
@@ -190,6 +227,11 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
               <Button variant="outline-info" onClick={() => handleShareClick(member.groupDto.id)}>
                 Share
               </Button>
+              {member.groupAdmin && (
+                <Button variant="outline-danger" className="ms-md-2" onClick={() => handleDeleteClick(member.groupDto.id)}>
+                  Delete Group
+                </Button>
+              )}
             </div>
           </Col>
         </Row>
@@ -208,25 +250,20 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
         </Modal.Header>
         <Modal.Body>
           <p>Invite others to join this group:</p>
-          <Row>
-            <Col>
-              <Button variant="secondary" onClick={() => handleShareOptionClick('email')}>
+          <Row className='justify-content-center'>
+            <Col className="text-center">
+              <Button variant="dark" onClick={() => handleShareOptionClick('email')}>
                 Email
               </Button>{' '}
             </Col>
-            <Col>
-              <Button variant="secondary" onClick={() => handleShareOptionClick('existingUser')}>
+            {/* <Col>
+              <Button variant="light" onClick={() => handleShareOptionClick('existingUser')}>
                 Existing User
               </Button>
-            </Col>
+            </Col> */}
             <Col>
-              <Button variant="secondary" onClick={handleCopyInviteLink}>
+              <Button variant="dark" onClick={handleCopyInviteLink}>
                 Copy Link
-              </Button>
-            </Col>
-            <Col>
-              <Button variant="secondary" onClick={() => handleShareOptionClick('sms')}>
-                SMS
               </Button>
             </Col>
           </Row>
@@ -287,6 +324,22 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseUserSearchModal}>
             Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this group? All members associated with this group will be deleted.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteConfirmation(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={() => handleGroupDelete()}>
+            Delete Group
           </Button>
         </Modal.Footer>
       </Modal>
