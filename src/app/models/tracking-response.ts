@@ -1,6 +1,6 @@
 import { Member } from "./profile-response";
 
-interface GroupDetails {
+export interface GroupDetails {
   id: number;
   name: string;
   description: string;
@@ -27,4 +27,12 @@ export interface TrackingResponse {
     gameStarted: boolean;
     responses: Response[]; 
 
+}
+
+export interface BasicGroupDetails {
+  id: number;
+  name: string;
+  description: string;
+  icon: string | null;
+  admin: Member
 }

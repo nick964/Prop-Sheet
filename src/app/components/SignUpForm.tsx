@@ -1,11 +1,13 @@
 "use client";
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Container, Col, Row, Button, Modal} from "react-bootstrap";
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
+import { BasicGroupDetails} from '../models/tracking-response';
 import styles from './SignUpForm.module.css';
 
 interface SignUpFormValues {
@@ -23,9 +25,12 @@ interface GroupFormProps {
 
 const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
   const router = useRouter();
+  const { data: session } = useSession();
   const [showModal, setShowModal] = React.useState(false);
+  const [showAlreadyInModal, setshowAlreadyInModal] = React.useState(false);
+  const [groupDetails, setGroupDetails] = React.useState<BasicGroupDetails | null>(null);
   const [profilePicture, setProfilePicture] = React.useState<File | null>(null);
-
+  const accessToken: string | undefined = session?.user?.accessToken;
   const initialValues: SignUpFormValues = {
     firstName: '',
     lastName: '',
@@ -56,6 +61,57 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
     }
     await signIn(provider, { callbackUrl: myCallbackUrl });
   }
+
+  const fetchGroupDetails = async () => {
+    console.log('fetching group details if user is already signed in');
+    try {
+      if (accessToken && groupId) {
+        const requestOptions = {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        };
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/details?groupId=${groupId}`, requestOptions);
+
+        if (response.ok) {
+          const result: BasicGroupDetails = await response.json();
+          console.log('group details');
+          console.log(result);
+          setGroupDetails(result);
+          setshowAlreadyInModal(true);
+        } 
+      }
+    } catch (error) {
+      console.error('Error fetching group data:', error);
+    }
+  };
+
+  const addToGroup = async () => {
+    console.log('adding user to group if already signed in');
+    try {
+      if (accessToken && groupId) {
+        const requestOptions = {
+          method: 'POST',
+          headers: { 
+                      'Authorization': `Bearer ${accessToken}`, 
+                      'Content-Type': 'application/json'
+                   }
+          };
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/addUser?groupId=${groupId}`, requestOptions);
+        if (response.ok) {
+          router.push('/profile');
+        } 
+      }
+    } catch (error) {
+      console.error('Error adding user to group', error);
+    }
+  };
+
+  useEffect(() => {
+    if (session && accessToken && groupId) {
+      fetchGroupDetails();
+    }
+    }, []);
+
 
   const handleSubmit = async (values: SignUpFormValues, { resetForm }: { resetForm: () => void }) => {
     // Handle form submission here (e.g., send data to a server)
@@ -95,6 +151,10 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
   const handleClose = () => {
     setShowModal(false);
     router.push('/api/auth/signin/credentials');
+  };
+
+  const handleAlreadyInModal = () => {
+    setshowAlreadyInModal(false);
   };
 
   return (
@@ -168,6 +228,26 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
         </Col>
       </Row>
     </Container>
+
+    <Modal show={showAlreadyInModal} onHide={handleAlreadyInModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>Join Existing Group?</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div>
+          <p>You are already signed in. Do you want to join the group?</p>
+          <div>
+            <p>Group Name: {groupDetails?.name}</p>
+            <p>Group Admin: {groupDetails?.admin?.name}</p>
+          </div>  
+        </div>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" onClick={addToGroup}>
+          Join Group
+        </Button>
+      </Modal.Footer>
+    </Modal>
 
     <Modal show={showModal} onHide={handleClose}>
       <Modal.Header closeButton>

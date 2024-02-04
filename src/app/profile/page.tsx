@@ -7,6 +7,7 @@ import { ProfileResponse } from '../models/profile-response';
 import {  Alert } from "react-bootstrap";
 import ProfileComponent from '../components/ProfileComponent';
 import NotLoggedInComponent from '../components/NotLoggedInComponent';
+import { signOut } from 'next-auth/react';
 
 const Page: FunctionComponent = () => {
   const { data: session, status } = useSession();
@@ -44,6 +45,10 @@ const Page: FunctionComponent = () => {
           result.gameStarted = await gameStartedResponse.json();
           setProfileResponse(result);
         } else {
+          if(response.status === 401) {
+            signOut({ callbackUrl: '/profile', redirect:true });
+          }
+          console.log(JSON.stringify(response));
           setError('Failed to fetch data from the API');
           console.error('Failed to fetch data from the API');
         }
