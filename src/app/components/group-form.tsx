@@ -81,7 +81,7 @@ export default function GroupForm() {
         } catch (error) {
             console.log(JSON.stringify(error));
             console.error('Failed to fetch data from the API - group creation', error);
-            setError('Error calling API' + error);
+            setError('Error calling API' + JSON.stringify(error));
         }
         setIsLoading(false);
     };
