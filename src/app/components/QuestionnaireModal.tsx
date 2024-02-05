@@ -49,7 +49,7 @@ const QuestionnaireModal: React.FC<QuestionnaireModalProps> = ({
   const progress = Math.round(((currentSection + 1) / data.length) * 100);
 
   return (
-    <Modal show={showModal} onHide={onClose} backdrop="static" keyboard={false}>
+    <Modal size="lg" show={showModal} onHide={onClose} backdrop="static" keyboard={false}>
       <Modal.Header closeButton>
         <Modal.Title>{currentSectionData.name}</Modal.Title>
       </Modal.Header>
