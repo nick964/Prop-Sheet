@@ -35,6 +35,8 @@ export default function GroupForm() {
     });
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+        addLog('Event: ' + (event?.currentTarget?.files?.[0]?.name || ''));
         const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
         setGroupIcon(file); // Update the state with the new file
       };
@@ -48,6 +50,7 @@ export default function GroupForm() {
         setError('');
         // Do something with the form values and the selected image
         console.log('Form values:', values);
+        addLog('Form values: ' + JSON.stringify(values));
         console.log('Selected image:', selectedImage);
 
         const formData = new FormData();
@@ -89,6 +92,7 @@ export default function GroupForm() {
         } catch (error) {
             console.log(JSON.stringify(error));
             console.error('Failed to fetch data from the API - group creation', error);
+            addLog('Error calling API' + JSON.stringify(error));
             setError('Error calling API' + JSON.stringify(error));
         }
         setIsLoading(false);
