@@ -79,7 +79,7 @@ export default function GroupForm() {
                 },
                 body: formData,
             };
-            console.log(options);
+            console.log(JSON.stringify(options));
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/create`, options);
             console.log('Response from API');
             console.log(response);
