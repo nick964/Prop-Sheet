@@ -14,8 +14,6 @@ import styles from './GroupForm.module.css';
 export default function GroupForm() {
     const router = useRouter();
     const { data: session, status } = useSession();
-    const [log, setLog] = useState('');
-    const [selectedImage, setSelectedImage] = useState(null);
     const [notLoggedIn, setNotLoggedIn] = useState(false);
     const [groupIcon, setGroupIcon] = React.useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -44,25 +42,17 @@ export default function GroupForm() {
                 return;
             }
             else {
+                setGroupIcon(file); // Update the state with the new file
                 setError('');
             }
         }
-        addLog('Event: ' + (event?.currentTarget?.files?.[0]?.name || ''));
-        setGroupIcon(file); // Update the state with the new file
       };
-
-      const addLog = (newLog: string) => {
-        setLog(log + '\n' + newLog);
-      }
 
     const handleFormSubmit = async (values: any) => {
         setIsLoading(true);
         setError('');
         // Do something with the form values and the selected image
         console.log('Form values:', values);
-        addLog('Form values: ' + JSON.stringify(values));
-        console.log('Selected image:', selectedImage);
-
         const formData = new FormData();
 
         // Append all form fields to the formData object
@@ -70,8 +60,6 @@ export default function GroupForm() {
          const value = values[key as keyof typeof values];
          if (key !== 'groupIcon' && value !== undefined && value !== null) {
            // Append only if value is not undefined and not null
-           addLog('Appending ' + key + ' to form data');
-           addLog('Value: ' + value);
            formData.append(key, value.toString()); // Convert value to string
          }
        });
@@ -81,15 +69,20 @@ export default function GroupForm() {
        }
 
         try {
-            addLog('Calling API to create group');
-            addLog('Form data: ' + JSON.stringify(formData));
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/create`, {
+            console.log('Calling API to create group');
+            console.log('Form data: ' + JSON.stringify(formData));
+            console.log('Group Icon: ' + groupIcon);
+            const options = {
                 method: 'POST',
                 headers: {
                 'Authorization': 'Bearer ' + session?.user?.accessToken
                 },
                 body: formData,
-            });
+            };
+            console.log(options);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/create`, options);
+            console.log('Response from API');
+            console.log(response);
             const data = await response.json();
             if (response.ok) {
                 router.push('/profile');
@@ -100,7 +93,6 @@ export default function GroupForm() {
         } catch (error) {
             console.log(JSON.stringify(error));
             console.error('Failed to fetch data from the API - group creation', error);
-            addLog('Error calling API' + error);
             setError('Error calling API' + JSON.stringify(error));
         }
         setIsLoading(false);
@@ -109,7 +101,6 @@ export default function GroupForm() {
 
     return (
         <div className={styles.formContainer}>
-        <p>{log}</p>
             <h3 className={styles.formHeading}>Create a new group</h3>
             {error && 
             <Alert key="danger" variant="danger">
