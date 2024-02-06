@@ -61,6 +61,7 @@ export default function GroupForm() {
          if (key !== 'groupIcon' && value !== undefined && value !== null) {
            // Append only if value is not undefined and not null
            formData.append(key, value.toString()); // Convert value to string
+           console.log('Appending ' + key + ' with value ' + value.toString());
          }
        });
    
