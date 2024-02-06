@@ -249,7 +249,10 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
       </Modal.Footer>
     </Modal>
 
-    <Modal show={showModal} onHide={handleClose}>
+    <Modal 
+      show={showModal} 
+      onHide={handleClose} 
+      backdrop="static">
       <Modal.Header closeButton>
         <Modal.Title>Sign Up Successful</Modal.Title>
       </Modal.Header>
