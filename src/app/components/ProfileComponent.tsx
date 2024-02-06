@@ -132,6 +132,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/delete`, requestOptions);
         if (response.ok) {
           console.log('success');
+          removeGroup(selectedGroup);
         } else {
           console.error('Failed to delete group');
         }
@@ -142,6 +143,12 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
       setIsLoading(false);
       setShowDeleteConfirmation(false);
     };
+
+  // function to remove group from the list after it has been deleted
+  const removeGroup = (groupId: number) => {
+    const updatedGroups = profileData.members.filter((group) => group.groupDto.id !== groupId);
+    profileData.members = updatedGroups;
+  };
 
   const handleShareOptionClick = (shareOption: string) => {
     setSelectedShareOption(shareOption);

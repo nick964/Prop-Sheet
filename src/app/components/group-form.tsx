@@ -33,10 +33,17 @@ export default function GroupForm() {
     });
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-
+        console.log('handleFileChange is called')
         //validate that the file is an image
         const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
         if(file) {
+            //validate taht the file is under 5MB
+            console.log('File size: ' + file.size);
+            console.log('Allowed size: ' + 5 * 1024 * 1024);
+            if(file.size > (5 * 1024 * 1024)) {
+                setError('File size must be less than 5MB');
+                return;
+            }
             if(file.type.split('/')[0] !== 'image') {
                 setError('Invalid file type. Please select an image');
                 return;
@@ -44,6 +51,7 @@ export default function GroupForm() {
             else {
                 setGroupIcon(file); // Update the state with the new file
                 setError('');
+                console.log(error);
             }
         }
       };
