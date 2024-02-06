@@ -39,11 +39,8 @@ export default function GroupForm() {
         setGroupIcon(file); // Update the state with the new file
       };
 
-      const addLog = (log: string) => {
-        if(log === '') {
-            setLog(this.log + log);
-        }
-        setLog(log);
+      const addLog = (newLog: string) => {
+        setLog(log + '\n' + newLog);
       }
 
     const handleFormSubmit = async (values: any) => {
