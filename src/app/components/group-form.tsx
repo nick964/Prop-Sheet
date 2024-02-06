@@ -14,6 +14,7 @@ import styles from './GroupForm.module.css';
 export default function GroupForm() {
     const router = useRouter();
     const { data: session, status } = useSession();
+    const [log, setLog] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
     const [notLoggedIn, setNotLoggedIn] = useState(false);
     const [groupIcon, setGroupIcon] = React.useState<File | null>(null);
@@ -38,6 +39,12 @@ export default function GroupForm() {
         setGroupIcon(file); // Update the state with the new file
       };
 
+      const addLog = (log: string) => {
+        if(log === '') {
+            setLog(this.log + log);
+        }
+        setLog(log);
+      }
 
     const handleFormSubmit = async (values: any) => {
         setIsLoading(true);
@@ -53,6 +60,8 @@ export default function GroupForm() {
          const value = values[key as keyof typeof values];
          if (key !== 'groupIcon' && value !== undefined && value !== null) {
            // Append only if value is not undefined and not null
+           addLog('Appending ' + key + ' to form data');
+           addLog('Value: ' + value);
            formData.append(key, value.toString()); // Convert value to string
          }
        });
@@ -62,6 +71,8 @@ export default function GroupForm() {
        }
 
         try {
+            addLog('Calling API to create group');
+            addLog('Form data: ' + JSON.stringify(formData));
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/create`, {
                 method: 'POST',
                 headers: {
@@ -89,6 +100,7 @@ export default function GroupForm() {
 
     return (
         <div className={styles.formContainer}>
+        <p>{log}</p>
             <h3 className={styles.formHeading}>Create a new group</h3>
             {error && 
             <Alert key="danger" variant="danger">
