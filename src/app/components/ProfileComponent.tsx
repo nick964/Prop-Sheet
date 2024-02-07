@@ -31,8 +31,12 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
   const [isGameStarted, setIsGameStarted] = useState(profileData.gameStarted);
   console.log('lgging profile data');
   console.log(profileData);
+  console.log('logging accessToken');
+  console.log(session?.user?.accessToken);
+  console.log(session?.user?.accessToken == '')
 
-  if(session?.user?.accessToken == null) {
+  if(session?.user?.accessToken == null || session?.user?.accessToken == '') {
+    console.log('no access token');
     router.push('/api/auth/signin/credentials');
   }
   const accessToken = session?.user?.accessToken;
@@ -276,19 +280,21 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
           </Row>
 
           {selectedShareOption === 'email' && (
-            <Form onSubmit={handleFormSubmit}>
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" />
-              </Form.Group>
-              <Form.Group controlId="formBasicName">
-                <Form.Label>Recipient Name</Form.Label>
-                <Form.Control type="text" placeholder="Name" />
-              </Form.Group>
-              <Button variant="primary" type="submit" disabled={isLoading}>
-                  {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Invite'}
-              </Button>
-            </Form>
+            <div className='pt-3'>
+              <Form onSubmit={handleFormSubmit}>
+                <Form.Group controlId="formBasicEmail">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control type="email" placeholder="Enter email" />
+                </Form.Group>
+                <Form.Group controlId="formBasicName">
+                  <Form.Label>Recipient Name</Form.Label>
+                  <Form.Control type="text" placeholder="Name" />
+                </Form.Group>
+                <Button variant="primary" type="submit" disabled={isLoading} className='pt-2'>
+                    {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Invite'}
+                </Button>
+              </Form>
+            </div>
           )}
 
           {selectedShareOption === 'sms' && (

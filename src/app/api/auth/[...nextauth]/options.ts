@@ -4,6 +4,7 @@ import TwitterProvider from "next-auth/providers/twitter";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from 'axios';
+const https = require('https');
 
 async function login(credentials: { username: string, password: string }) {
     try {
@@ -16,7 +17,13 @@ async function login(credentials: { username: string, password: string }) {
         };
         console.log('calling this url');
         console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signin`);
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signin`, credentials);
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signin`,
+         credentials,
+         {
+            httpsAgent: new https.Agent({
+              rejectUnauthorized: false
+            })
+          });
         const data = response.data;
         console.log(JSON.stringify(data));
         return data;
@@ -37,7 +44,13 @@ async function oauthlogin(credentials: { username: string }) {
         };
         console.log('calling this url');
         console.log(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/oauth-register`);
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/oauth-register`, credentials);
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/oauth-register`, 
+        credentials,
+        {
+            httpsAgent: new https.Agent({
+              rejectUnauthorized: false
+            })
+        });
         const data = response.data;
         console.log(JSON.stringify(data));
         return data;
