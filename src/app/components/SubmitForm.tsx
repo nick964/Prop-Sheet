@@ -5,6 +5,7 @@ import { AnswerDto } from '../models/answer';
 import { QuestionSection } from '../models/question-section';
 import QuestionnaireModal from './QuestionnaireModal';
 import ConfirmationModal from './ConfirmationModal';
+import { useRouter } from 'next/navigation';
 
 interface SubmitFormProps {
   data: QuestionSection[] | null;
@@ -24,6 +25,7 @@ const SubmitForm: React.FC<SubmitFormProps> = ({ data, onSubmit, groupId }) => {
   const [loading, setLoading] = useState(false);
   const [sectionError, setSectionError] = useState<string | null>(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const router = useRouter();
 
   const handleResponse = (questionId: any, response: any) => {
     setUserResponses((prevResponses) => {
@@ -97,6 +99,7 @@ const SubmitForm: React.FC<SubmitFormProps> = ({ data, onSubmit, groupId }) => {
   };
 
   const onCloseModal = () => {
+    router.push('/profile');
     setShowModal(false);
   };
 

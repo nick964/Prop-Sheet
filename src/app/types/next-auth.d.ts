@@ -8,6 +8,9 @@ declare module "next-auth" {
     user: {
       /** The user's access token. */
       accessToken: string
+      icon: string
+      role: string
+      name: string
     }
   }
 
@@ -17,6 +20,9 @@ declare module "next-auth" {
     interface JWT {
       id?: string;
       token?: string; // Adding the token property
+      icon?: string; // Adding the icon property
+      role?: string; // Adding the role property
+      name?: string; // Adding the name property
     }
   
     /**
@@ -24,6 +30,9 @@ declare module "next-auth" {
      */
     interface User {
       token?: string; // Adding the token property
+      icon?: string; // Adding the token property
+      roles?: string[]; // Adding the token property
+      name?: string; // Adding the name property
     }
 
     /**

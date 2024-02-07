@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { AnswerDto } from '../models/answer';
+import { Spinner } from 'react-bootstrap';
 import { QuestionSection } from '../models/question-section';
 import { useRouter } from 'next/navigation';
 import SubmitForm from './SubmitForm';
@@ -78,7 +79,13 @@ const ExampleComponent: React.FC<ExampleComponentProps> = ({ groupId }) => {
 
   
   if (status === 'loading' || questions == null) {
-    return <div>Loading...</div>;
+    return (
+      <div className="text-center mt-5">
+      <Spinner animation="border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    </div>
+    );
   }
 
   return <SubmitForm data={questions} onSubmit={submitCurrentSelections} groupId={groupId}  />;

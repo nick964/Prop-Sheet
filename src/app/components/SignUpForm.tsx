@@ -43,7 +43,7 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required('First name is required'),
     lastName: Yup.string().required('Last name is required'),
-    email: Yup.string().email('Invalid email address').required('Email is required'),
+    email: Yup.string().min(6, 'Username must be at least 6 characters').required('Email is required'),
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
   });
 
@@ -183,9 +183,9 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
 
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
-            Email
+            Username
           </label>
-          <Field type="email" className="form-control" id="email" name="email" />
+          <Field type="text" className="form-control" id="email" name="email" />
           <ErrorMessage name="email" component="div" className="text-danger" />
         </div>
 
@@ -256,7 +256,14 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
       <Modal.Header closeButton>
         <Modal.Title>Sign Up Successful</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Woohoo, you are successfully signed up! Please go to the sign up page to login.</Modal.Body>
+      <Modal.Body>
+        <div className='text-center mb-5'>
+          <h5>Woohoo, you are successfully signed up!</h5>
+        </div>
+        
+        <h5 className='text-center'>You will now be redirected to the login page to login.</h5>
+        
+        </Modal.Body>
       <Modal.Footer>
         <Button variant="primary" onClick={handleClose}>
           OK

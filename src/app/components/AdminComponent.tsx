@@ -184,6 +184,12 @@ const AdminPage: React.FC = () => {
       }));
   };
 
+  if(session?.user?.role == null || session?.user?.role !== "ROLE_ADMIN") {
+    return (
+        <h2>You are not authorized to view this page so please buzz off</h2>
+    )
+  }
+
   return (
     <Container className="mt-4">
       <ToastContainer position="top-end" className="p-3">

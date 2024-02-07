@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, FunctionComponent } from 'react';
 import { ProfileResponse } from '../models/profile-response';
-import {  Alert } from "react-bootstrap";
+import { Alert, Spinner } from "react-bootstrap";
 import ProfileComponent from '../components/ProfileComponent';
 import NotLoggedInComponent from '../components/NotLoggedInComponent';
 import { signOut } from 'next-auth/react';
@@ -80,7 +80,11 @@ const Page: FunctionComponent = () => {
         {!error && profileResponse != null ? (
           <ProfileComponent profileData={profileResponse} />
         ) : (
-          <div>Loading... where is this spinner</div>
+          <div className="text-center mt-5">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
         )}
       </div>
     )

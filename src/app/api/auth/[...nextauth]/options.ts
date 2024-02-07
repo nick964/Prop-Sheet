@@ -186,11 +186,17 @@ export const options: NextAuthOptions = {
                     if (returnedUser) {
                         token.accessToken = returnedUser.token;
                         token.refreshToken = returnedUser.refreshToken;
+                        token.picture = returnedUser.icon;
+                        token.role = returnedUser.roles[0];
+                        token.name = returnedUser.name;
                     }
                 } else {
                     console.log('setting token in jwt function');
                     console.log(user.token);
                     token.accessToken = user.token;
+                    token.picture = user.icon;
+                    token.role = user.roles?.[0] ?? '';
+                    token.name = user.name;
                 }
             }
             return token;
@@ -199,6 +205,9 @@ export const options: NextAuthOptions = {
             // Send properties to the client, like an access_token and user id from a provider.
             if (session.user) {
                 session.user.accessToken = token.accessToken?.toString() ?? '';
+                session.user.icon = token.picture?.toString() ?? '';
+                session.user.role = token.role?.toString() ?? '';
+                session.user.name = token.name?.toString() ?? '';
             }
             
             return session;

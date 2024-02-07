@@ -2,7 +2,7 @@
 import React from 'react';
 import { Container, Row, Col, ListGroup, Image } from 'react-bootstrap';
 import { TrackingResponse } from '../models/tracking-response';
-
+import  ResultsPage  from '../components/ResultsWrapper';
 
 interface Response {
   questionText: string;
@@ -96,6 +96,12 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
               </h3>
             </div>
           </Col>
+        </Row>
+
+        <Row>
+          {(data?.groupDetails?.id !== null && data?.groupDetails.id !== undefined) && 
+            <ResultsPage groupId={data?.groupDetails.id} isGlobal={false} />
+          }
         </Row>
       </div>
 
