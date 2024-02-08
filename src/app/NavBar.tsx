@@ -21,7 +21,7 @@ export default function NavBar() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto"> {/* Use me-auto to push the next nav items to the right */}
             <Nav.Link as={Link} href="/profile" style={{ color: pathname === '/profile' ? "#0d6efd" : "white" }}>
-              Your Groups
+              Profile
             </Nav.Link>
             <Nav.Link as={Link} href="/create-group" style={{ color: pathname === '/create-group' ? "#0d6efd" : "white", marginLeft: '10px' }}>
               Create Group
