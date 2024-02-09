@@ -145,12 +145,17 @@ export const options: NextAuthOptions = {
                     };
                     console.log('credentials before oauth login - this creates the user if they do not exist');
                     console.log(credentials);
-                    const returnedUser = await oauthlogin(credentials);
-                    console.log('returnedUser in sign in');
-                    console.log(returnedUser);
-                    if(returnedUser != null && returnedUser.success === false) {
-                        const errorMessage = returnedUser.errorMessage;
-                        return ('/signup-conflict?message=' + errorMessage);
+                    try {
+                        const returnedUser = await oauthlogin(credentials);
+                        console.log('returnedUser in sign in');
+                        console.log(returnedUser);
+                        if(returnedUser != null && returnedUser.success === false) {
+                            const errorMessage = returnedUser.errorMessage;
+                            return ('/signup-conflict?message=' + errorMessage);
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        return ('/signup-conflict?message=An error occurred');
                     }
                 }
             } 
