@@ -29,6 +29,12 @@ export interface TrackingResponse {
 
 }
 
+export interface ConfigResponse {
+  rule: string;
+  description: string;
+  enabled: boolean;
+}
+
 export interface BasicGroupDetails {
   id: number;
   name: string;

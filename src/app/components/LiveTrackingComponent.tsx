@@ -17,9 +17,12 @@ interface Response {
 
 interface LiveTrackingProps {
   data: TrackingResponse | null;
+  gameStarted: boolean;
+  calculationFinished: boolean;
+  gameOver: boolean;
 }
 
-const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
+const LiveTracking: React.FC<LiveTrackingProps> = ({ data, gameStarted, calculationFinished, gameOver }) => {
   // Organize responses by section
   const sections: { [key: string]: Response[] } = {};
   data?.responses.forEach((response) => {
@@ -74,12 +77,52 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({ data }) => {
               <span className="group-name">{data?.groupDetails?.name}</span>
             </h3>
             <div className="leader-details">
-            {data?.position == 1 && (
-              <p className="lead-message">You are currently in the lead!!</p>
+              
+            {(data?.position == 1 && gameOver && calculationFinished) && (
+              <p className="lead-message">You are the winner!!</p>
             )}
-              <p className="current-leader">Current Leader: <strong>{data?.groupDetails?.inLead?.name}</strong></p>
-              <p className="leader-score">{data?.groupDetails?.inLead?.name}&apos;s score: <strong>{data?.groupDetails?.inLead?.score}</strong></p>
+
+            {(data?.position == 1 && gameStarted && !gameOver) && (
+              <p className="lead-message">You are currently in the lead!</p>
+            )}
+              {(calculationFinished && gameOver) && (
+                <p className="lead-message">Winner: {data?.groupDetails?.inLead?.name}</p>
+              )}
+
+              {(!calculationFinished) && (
+                <div>
+                  <p className="lead-message">Current Leader: {data?.groupDetails?.inLead?.name}</p>
+                  <p className="leader-score">{data?.groupDetails?.inLead?.name}&apos;s score: {data?.groupDetails?.inLead?.score}</p>
+                </div>
+              )}
+
+              {(!gameStarted && !gameOver && !calculationFinished) && (
+                <div>
+                  <p className="lead-message">Waiting for game to start</p>
+                </div>
+              )}
             </div>
+          </Col>
+        </Row>
+
+        <Row className="mb-4 live-tracking-group-details">
+          <Col xs={12} md={6} className='mb-3'>
+            <h3 className="group-name-title text-center">
+              Game Status: <br />
+              <span className="statusResult">
+                {gameOver ? "Game Over" : (gameStarted ? "Game in Progress" : "Game Not Started")}
+                
+              </span>
+            </h3>
+          </Col>
+          <Col xs={12} md={6}>
+            <h3 className="group-name-title text-center">
+              Calulation Status: <br/>
+              <span className="statusResult">
+                {calculationFinished ? "All answers entered! Results are in!" : 
+                "Still waiting for all answers to be entered.."}
+              </span>
+            </h3>
           </Col>
         </Row>
         

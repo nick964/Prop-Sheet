@@ -116,7 +116,14 @@ img {
 
 .group-name-title {
   font-size: 1.2rem;
+  font-weight: bold;
   color: #343a40; /* Bootstrap dark gray */
+}
+
+.statusResult{
+  font-size: 1.4rem;
+  color: #28a745; /* Bootstrap success color */
+
 }
 
 .group-name {

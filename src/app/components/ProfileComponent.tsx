@@ -259,9 +259,9 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
           <p>Invite others to join this group:</p>
           <Row className='justify-content-center'>
             <Col className="text-center">
-              <Button variant="dark" onClick={() => handleShareOptionClick('email')}>
+              {/* <Button variant="dark" onClick={() => handleShareOptionClick('email')}>
                 Email
-              </Button>{' '}
+              </Button>{' '} */}
             </Col>
             {/* <Col>
               <Button variant="light" onClick={() => handleShareOptionClick('existingUser')}>
