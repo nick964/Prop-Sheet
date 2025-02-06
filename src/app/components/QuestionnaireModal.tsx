@@ -1,7 +1,5 @@
-// components/QuestionnaireModal.tsx
-
 import React from 'react';
-import { Modal, Button, Alert, ProgressBar, Form, Spinner, Row, Col } from 'react-bootstrap';
+import { Modal, Button, Alert, ProgressBar, Form, Spinner, Row, Col, Card } from 'react-bootstrap';
 import { QuestionSection } from '../models/question-section';
 import styles from './SubmitComponent.module.css';
 
@@ -49,58 +47,96 @@ const QuestionnaireModal: React.FC<QuestionnaireModalProps> = ({
   const progress = Math.round(((currentSection + 1) / data.length) * 100);
 
   return (
-    <Modal size="lg" show={showModal} onHide={onClose} backdrop="static" keyboard={false}>
-      <Modal.Header closeButton>
-        <Modal.Title>{currentSectionData.name}</Modal.Title>
+    <Modal 
+      size="lg" 
+      show={showModal} 
+      onHide={onClose} 
+      backdrop="static" 
+      keyboard={false}
+      className={styles.questionnaireModal}
+    >
+      <Modal.Header className={styles.modalHeader}>
+        <Modal.Title className={styles.modalTitle}>{currentSectionData.name}</Modal.Title>
       </Modal.Header>
-      <Modal.Body className={'modal-content'} key={currentSection}>
-        <ProgressBar now={progress} label={`${progress}%`} />
+      <Modal.Body className={styles.modalBody} key={currentSection}>
+        <div className={styles.progressContainer}>
+          <ProgressBar 
+            now={progress} 
+            label={`${progress}%`} 
+            variant="success"
+            className={styles.progressBar}
+          />
+          <span className={styles.sectionIndicator}>
+            Section {currentSection + 1} of {data.length}
+          </span>
+        </div>
+
         {currentSectionData.questions.map((question) => (
-          <div key={question.id} className='mb-2 mt-2'>
-            <Form key={question.id}>
+          <Card key={question.id} className={styles.questionCard}>
+            <Card.Body>
               <Form.Group controlId={question.id}>
-                <Form.Label >
-                  <b>
+                <Form.Label className={styles.questionLabel}>
                   {question.text}
-                  {question.lineValue !== null && `: ${question.lineValue}`}
-                  </b>
+                  {question.lineValue !== null && (
+                    <span className={styles.lineValue}>Line: {question.lineValue}</span>
+                  )}
                 </Form.Label>
-                <Row className='g-3'>              
-                {question.options.map((option) => (
-                  <Col
-                    xs={12} sm={6} md={4} lg={3} xl={3} // Responsive grid columns
-                    className="d-flex" // This will help with aligning the label and input
-                    key={option}
-                  >
-                  <Form.Check
-                    key={option}
-                    type="radio"
-                    label={mapOptionLabel(option)}
-                    name={`question-${question.id}`}
-                    checked={userResponses[currentSection]?.[question.id] === option}
-                    onChange={() => handleResponse(question.id, option)}
-                    className="flex-grow-1"
-                  />
-                  </Col>
-                ))}
-                </Row>
+                <div className={styles.optionsContainer}>
+                  {question.options.map((option) => (
+                    <div
+                      key={option}
+                      className={`${styles.optionButton} ${
+                        userResponses[currentSection]?.[question.id] === option ? styles.selected : ''
+                      }`}
+                      onClick={() => handleResponse(question.id, option)}
+                    >
+                      <div className={styles.optionContent}>
+                        <div className={styles.radioCircle}>
+                          {userResponses[currentSection]?.[question.id] === option && (
+                            <div className={styles.radioInner} />
+                          )}
+                        </div>
+                        <span className={styles.optionLabel}>{mapOptionLabel(option)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </Form.Group>
-            </Form>
-          </div>
+            </Card.Body>
+          </Card>
         ))}
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
-          Close
-        </Button>
-        <Button variant="primary" onClick={onPreviousSection} disabled={isFirstSection}>
-          Previous Section
-        </Button>
-        <Button variant="primary" onClick={onNextSection}>
-          {currentSection === data.length - 1 ? 'Submit' : 'Next Section'}
-        </Button>
+      <Modal.Footer className={styles.modalFooter}>
+        <div className={styles.footerButtons}>
+          <Button 
+            variant="outline-secondary" 
+            onClick={onClose}
+            className={styles.footerButton}
+          >
+            Close
+          </Button>
+          <Button 
+            variant="outline-primary" 
+            onClick={onPreviousSection} 
+            disabled={isFirstSection}
+            className={styles.footerButton}
+          >
+            Previous
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={onNextSection}
+            className={styles.footerButton}
+          >
+            {currentSection === data.length - 1 ? 'Submit' : 'Next'}
+          </Button>
+        </div>
+        {sectionError && (
+          <Alert variant="danger" className={styles.errorAlert}>
+            {sectionError}
+          </Alert>
+        )}
       </Modal.Footer>
-      {sectionError && <Alert variant="danger">{sectionError}</Alert>}
       {loading && (
         <div className={styles.loader}>
           <Spinner animation="border" role="status">

@@ -1,122 +1,178 @@
 "use client"
 import React from 'react';
-import { Container, Button, Row, Col } from 'react-bootstrap';
+import { Container, Button, Row, Col, Card } from 'react-bootstrap';
 import Image from 'next/image';
 import Link from 'next/link';
 
 const imageStyle = {
-  borderRadius: '5px',
-  border: '3px solid #fff',
-  boxShadow: '0 0 10px rgba(0,0,0,0.5)'
+  borderRadius: '8px',
+  border: '2px solid #fff',
+  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+  transition: 'transform 0.3s ease',
 }
 
-
 const HomePage: React.FC = () => {
-    return (
-        <>
-          <div className="hero-section text-center bg-hero-1 pb-5 pt-5" style={{backgroundColor: '#004864'}}>
-            <Container style={{ maxWidth: '500px' }}>
+  return (
+    <>
+      {/* Hero Section */}
+      <div className="hero-section text-center pb-5 pt-5" style={{ backgroundColor: '#004864' }}>
+        <Container>
+          <Row className="align-items-center">
+            <Col lg={6} className="mb-4 mb-lg-0">
+              <div className="text-white">
+                <h1 className="display-4 fw-bold mb-4">Super Bowl LIX Prop Tracker</h1>
+                <p className="lead mb-4">
+                  Join the ultimate Super Bowl experience! Create groups, make predictions, and compete with friends in real-time during the big game.
+                </p>
+                <div className="d-flex gap-3 justify-content-center">
+                  <Link href="/signup">
+                    <Button variant="light" size="lg" className="fw-bold">
+                      Get Started
+                    </Button>
+                  </Link>
+                  <Link href="/global-leaderboard">
+                    <Button variant="outline-light" size="lg">
+                      View Leaderboard
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </Col>
+            <Col lg={6}>
               <div className="image-wrapper">
-                  <Image
-                  src="/images/SuperBowlLogo.png" // Route of the image file
-                  height={500} // Desired size with correct aspect ratio
-                  width={500} // Desired size with correct aspect ratio
-                  alt="Logo for super bowl prop bet tracker"
+                <Image
+                  src="/images/SuperBowlLogo.png"
+                  height={500}
+                  width={500}
+                  alt="Super Bowl Prop Bet Tracker Logo"
                   style={imageStyle}
-                  layout="responsive"
-                  className="img-fluid"
-                  
+                  className="img-fluid hover-scale"
+                  priority
                 />
               </div>
-                <p className="lead pt-5" style={{color: 'white'}}>
-                  The ultimate destination for Super Bowl prop betting fun. Predict, compete, and enjoy the game like never before.
-                </p>
-                <Link href="/signup">
-                  <Button variant="outline-light" size="lg" className="cta-button">
-                    Get Started
-                  </Button>
-                </Link>
+            </Col>
+          </Row>
+        </Container>
+      </div>
 
-            </Container>
-          </div>
-    
-          <div className="hero-section text-center bg-hero-2 pb-5 pt-5">
-            <Container>
-              <h2>Make Your Predictions</h2>
-              <p className="lead">
-                Answer exciting prop questions about the Super Bowl.
+      {/* Features Section */}
+      <div className="py-5" style={{ backgroundColor: '#f8f9fa' }}>
+        <Container>
+          <h2 className="text-center mb-5 display-5">How It Works</h2>
+          <Row className="g-4">
+            <Col md={4}>
+              <Card className="h-100 border-0 shadow-sm">
+                <Card.Body className="text-center p-4">
+                  <div className="mb-4">
+                    <Image
+                      src="/images/SubmitYourAnswers.png"
+                      height={200}
+                      width={200}
+                      alt="Submit Predictions"
+                      style={imageStyle}
+                      className="img-fluid"
+                    />
+                  </div>
+                  <h3 className="h4 mb-3">Make Predictions</h3>
+                  <p className="text-muted">
+                    Answer exciting prop questions about every aspect of the Super Bowl, from coin toss to final score.
+                  </p>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4}>
+              <Card className="h-100 border-0 shadow-sm">
+                <Card.Body className="text-center p-4">
+                  <div className="mb-4">
+                    <Image
+                      src="/images/LiveTracking.png"
+                      height={200}
+                      width={200}
+                      alt="Live Tracking"
+                      style={imageStyle}
+                      className="img-fluid"
+                    />
+                  </div>
+                  <h3 className="h4 mb-3">Track Live</h3>
+                  <p className="text-muted">
+                    Watch your predictions unfold in real-time during the game with our live tracking system.
+                  </p>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4}>
+              <Card className="h-100 border-0 shadow-sm">
+                <Card.Body className="text-center p-4">
+                  <div className="mb-4">
+                    <Image
+                      src="/images/Compete.png"
+                      height={200}
+                      width={200}
+                      alt="Compete"
+                      style={imageStyle}
+                      className="img-fluid"
+                    />
+                  </div>
+                  <h3 className="h4 mb-3">Compete & Win</h3>
+                  <p className="text-muted">
+                    Compete with friends in private groups or aim for the top spot on our global leaderboard.
+                  </p>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+
+      {/* CTA Section */}
+      <div className="py-5" style={{ backgroundColor: '#004864' }}>
+        <Container>
+          <Row className="justify-content-center text-center">
+            <Col md={8}>
+              <h2 className="text-white mb-4">Ready to Join the Fun?</h2>
+              <p className="lead text-white mb-4">
+                Create your account now and start making your Super Bowl predictions!
               </p>
-              <Container style={{ maxWidth: '900px' }}>
-                <Row className='pb-5'>
-                  <Col>
-                    <div className="image-wrapper">
-                      <Image
-                      src="/images/SubmitYourAnswers.png" // Route of the image file
-                      height={500} // Desired size with correct aspect ratio
-                      width={500} // Desired size with correct aspect ratio
-                      alt="Logo for super bowl prop bet tracker"
-                      style={imageStyle}
-                      layout="responsive"
-                      className="img-fluid"
-                      
-                    />
-                  </div>
-                  </Col>
-                  <Col>
-                    <div className="image-wrapper">
-                      <Image
-                      src="/images/LiveTracking.png" // Route of the image file
-                      height={500} // Desired size with correct aspect ratio
-                      width={500} // Desired size with correct aspect ratio
-                      alt="Logo for super bowl prop bet tracker"
-                      style={imageStyle}
-                      layout="responsive"
-                      className="img-fluid"
-                      
-                    />
-                  </div>
-                  </Col>
-                  <Col>
-                    <div className="image-wrapper">
-                      <Image
-                      src="/images/Compete.png" // Route of the image file
-                      height={500} // Desired size with correct aspect ratio
-                      width={500} // Desired size with correct aspect ratio
-                      alt="Logo for super bowl prop bet tracker"
-                      style={imageStyle}
-                      layout="responsive"
-                      className="img-fluid"
-                      
-                    />
-                  </div>
-                  </Col>
-                </Row>
-              </Container>
               <Link href="/signup">
-                <Button variant="outline-dark" size="lg" className="cta-button">
-                  Start Predicting
+                <Button variant="light" size="lg" className="fw-bold px-5">
+                  Sign Up Now
                 </Button>
               </Link>
-            </Container>
-          </div>
-    
-          <div className="hero-section text-center bg-hero-3 pb-5 pt-5" style={{backgroundColor: '#004864'}}>
-            <Container style={{ maxWidth: '500px' }}>
-              <h2 style={{color: 'white'}}>Real-time Tracking</h2>
-              <p className="lead" style={{color: 'white'}}>
-                Watch your predictions unfold live during the Super Bowl.
-              </p>
-              <Link href="/signup">
-                <Button variant="outline-light" size="lg" className="cta-button">
-                  Join the Fun
-                </Button>
-              </Link>
-            </Container>
-          </div>
+            </Col>
+          </Row>
+        </Container>
+      </div>
 
-          {/* Additional Sections */}
-        </>
-      );
+      {/* Additional CSS */}
+      <style jsx global>{`
+        .hover-scale:hover {
+          transform: scale(1.02);
+        }
+        
+        .hero-section {
+          background-image: linear-gradient(45deg, #003854, #004864);
+        }
+        
+        .display-4 {
+          font-weight: 800;
+          letter-spacing: -0.02em;
+        }
+        
+        .lead {
+          font-size: 1.25rem;
+          font-weight: 400;
+        }
+        
+        .card {
+          transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+          transform: translateY(-5px);
+        }
+      `}</style>
+    </>
+  );
 };
 
 export default HomePage;
