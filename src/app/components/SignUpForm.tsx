@@ -215,9 +215,6 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
 
           <div id="OauthSigninOptions"className={`mt-4 ${styles.OauthSigninOptions}`}>
             <h2>Or sign up with</h2>
-            <Button variant="outline-primary" onClick={() => handleSignIn('facebook', groupId)}  className={`oauth-button ${styles.oauthButton}`}>
-              Sign up with Facebook
-            </Button>
             <Button variant="outline-info" onClick={() => handleSignIn('twitter', groupId)}  className={`oauth-button ${styles.oauthButton}`}>
               Sign up with Twitter
             </Button>

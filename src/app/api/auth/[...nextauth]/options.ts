@@ -1,7 +1,6 @@
 import type { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google";
 import TwitterProvider from "next-auth/providers/twitter";
-import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from 'axios';
 
@@ -92,10 +91,6 @@ export const options: NextAuthOptions = {
                 image: profile.data.profile_image_url,
               }
             },
-        }),
-        FacebookProvider({
-            clientId: process.env.FACEBOOK_CLIENT_ID as string,
-            clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string
         })
     ],
     callbacks: {
