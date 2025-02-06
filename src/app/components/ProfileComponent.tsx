@@ -1,42 +1,46 @@
 "use client"
 
-// Import necessary libraries and components
-import React, { useState} from 'react';
-import { Card, ListGroup, Button, Form, Spinner, Row, Col, Modal } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Card, Button, Form, Spinner, Row, Col, Modal, Container, Alert, Toast } from 'react-bootstrap';
 import { ProfileResponse } from '../models/profile-response';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import styles from './ProfileComponent.module.css';
+import Image from 'next/image';
 
 interface ProfileComponentProps {
   profileData: ProfileResponse;
 }
 
 const EmptyGroupsComponent: React.FC = () => (
-  <p>You are not a member of any groups. <Link href="/create-group">Create a group</Link>.</p>
+  <div className="text-center py-5">
+    <h3 className="mb-4">You are not a member of any groups yet</h3>
+    <Link href="/create-group">
+      <Button variant="primary" size="lg">Create Your First Group</Button>
+    </Link>
+  </div>
 );
 
 const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
-  console.log('in profile component');
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [selectedGroup, setSelectedGroup] = useState(0);
   const [selectedShareOption, setSelectedShareOption] = useState('');
-  const [showUserSearchModal, setShowUserSearchModal] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isGameStarted, setIsGameStarted] = useState(profileData.gameStarted);
-  console.log('lgging profile data');
-  console.log(profileData);
+  const [isGameStarted] = useState(profileData.gameStarted);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
-  if(session?.user?.accessToken == null) {
+  if (session?.user?.accessToken == null) {
     router.push('/api/auth/signin/credentials');
+    return null;
   }
-  const accessToken = session?.user?.accessToken;
 
+  const accessToken = session?.user?.accessToken;
 
   const handleShareClick = (groupId: number) => {
     setSelectedGroup(groupId);
@@ -44,12 +48,8 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
   };
 
   const showDefaultIcon = (icon: string | null) => {
-    if(icon == null || icon == '') {
-      return "/images/DefaultGroupIcon.png";
-    } else {
-      return icon;
-    }
-  }
+    return icon || "/images/DefaultGroupIcon.png";
+  };
 
   const handleDeleteClick = (groupId: number) => {
     setSelectedGroup(groupId);
@@ -57,302 +57,223 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
   };
 
   const handleCopyInviteLink = async () => {
-    const inviteLink = "https://www.superbowlproptracker.com/signup?groupid=" + selectedGroup; // Replace with your actual invite link
-  
+    const inviteLink = `https://www.superbowlproptracker.com/signup?groupid=${selectedGroup}`;
     try {
       await navigator.clipboard.writeText(inviteLink);
-      alert("Invite link copied to clipboard!"); // Or update the UI to show confirmation
+      setToastMessage('Invite link copied to clipboard!');
+      setShowToast(true);
+      setShowModal(false); // Close the modal after successful copy
     } catch (err) {
       console.error("Failed to copy: ", err);
-      alert("Failed to copy the link. Please try again."); // Or handle the error in the UI
+      setToastMessage('Failed to copy the link. Please try again.');
+      setShowToast(true);
     }
   };
 
-    // Add additional handlers and logic as needed
-    const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      setIsLoading(true);
-      console.log('in form submit');
-      try {
-        if (accessToken) {
-
-          let req;
-          if(selectedShareOption === 'email') {
-            req = {
-              groupId: selectedGroup,
-              inviteType: selectedShareOption,
-              recipient: event.currentTarget.formBasicEmail.value,
-              name: event.currentTarget.formBasicName.value,
-            };
-          } else {
-            req = {
-              groupId: selectedGroup,
-              inviteType: selectedShareOption,
-              recipient: event.currentTarget.formBasicPhone.value,
-              name: event.currentTarget.formBasicName.value,
-            };
-          }
-
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'},
-            body: JSON.stringify(req) 
-        };
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/share`, requestOptions);
-
-          if (response.ok) {
-            console.log('success');
-          } else {
-            console.error('Failed to fetch data from the API');
-          }
-        } 
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-      
-  
-  
-      setIsLoading(false);
-    };
-
-        // Add additional handlers and logic as needed
-    const handleGroupDelete = async () => {
-      setIsLoading(true);
-      console.log('group delete');
-      try {
-        if (accessToken) {
-          const req = {
-              groupId: selectedGroup
-          };
-          const requestOptions = {
-              method: 'POST',
-              headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json'},
-              body: JSON.stringify(req) 
-          };
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/delete`, requestOptions);
+  const handleGroupDelete = async () => {
+    setIsLoading(true);
+    try {
+      if (accessToken) {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/delete`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ groupId: selectedGroup })
+        });
+        
         if (response.ok) {
-          console.log('success');
           removeGroup(selectedGroup);
         } else {
-          console.error('Failed to delete group');
+          setError('Failed to delete group');
         }
-        } 
-      } catch (error) {
-        console.error('Error fetching data:', error);
       }
-      setIsLoading(false);
-      setShowDeleteConfirmation(false);
-    };
-
-  // function to remove group from the list after it has been deleted
-  const removeGroup = (groupId: number) => {
-    const updatedGroups = profileData.members.filter((group) => group.groupDto.id !== groupId);
-    profileData.members = updatedGroups;
-  };
-
-  const handleShareOptionClick = (shareOption: string) => {
-    setSelectedShareOption(shareOption);
-    // Handle the respective action based on the selected share option
-    switch (shareOption) {
-      case 'email':
-        // Add logic to send email invitation
-        break;
-      case 'sms':
-        // Add logic to send SMS invitation
-        break;
-      case 'existingUser':
-        setShowUserSearchModal(true);
-        break;
-      default:
-        break;
+    } catch (error) {
+      setError('Error deleting group');
     }
+    setIsLoading(false);
+    setShowDeleteConfirmation(false);
   };
 
-  const handleCloseModal = () => {
-    setSelectedGroup(0);
-    setSelectedShareOption('');
-    setShowModal(false);
+  const removeGroup = (groupId: number) => {
+    profileData.members = profileData.members.filter(
+      (group) => group.groupDto.id !== groupId
+    );
   };
-
-  const handleCloseUserSearchModal = () => {
-    setShowUserSearchModal(false);
-  };
-
 
   return (
-    <>
-
-    {isGameStarted && (
-      <div className='mb-5 mt-5 text-center'>
-        <Card className={`${styles.card} shadow-sm`}>
-          <Card.Header className="bg-danger text-white">Game Status</Card.Header> {/* Colorful header */}
-          <Card.Body>
-            <p className="text-danger">The game has already started! You can no longer submit your picks.</p>
-          </Card.Body>
-        </Card>
+    <div className={styles.pageContainer}>
+      <div className={styles.toastContainer}>
+        <Toast 
+          show={showToast} 
+          onClose={() => setShowToast(false)} 
+          delay={3000} 
+          autohide
+          className={styles.toast}
+        >
+          <Toast.Header closeButton={false}>
+            <strong className="me-auto">Notification</strong>
+          </Toast.Header>
+          <Toast.Body>{toastMessage}</Toast.Body>
+        </Toast>
       </div>
-    )}
-    <Card className={`${styles.card} shadow-sm`}>
-      <Card.Header className="bg-primary text-white">Your Groups</Card.Header> {/* Colorful header */}
-      <Card.Body>
-  {profileData.members.length > 0 ? (
-    <div>
-      {profileData.members.map((member, index) => (
-        <Row key={index} className="align-items-center mb-3"> {/* Each member is a row */}
-          <Col md={8} className="mb-2 mb-md-0"> {/* Adjust sizes as per your need */}
-            <h5>
-              <img 
-              src={showDefaultIcon(member.groupDto.icon)}
-                alt="Group Icon" 
-                className="rounded-circle me-2"
-                style={{ width: '50px', height: '50px', objectFit: 'cover' }}
-              />
-              <Link href={member.submission_status === 0 ? `/submit/${member.groupDto.id}` : `/track/${member.groupDto.id}`}>
-                {`Group: ${member.groupDto.name}`}
-              </Link>
 
-            </h5>
-            
-            <p>
-              Member Count: <strong>{member.groupDto.memberCount}</strong>
-            </p>
-            <p className={`${member.submission_status == 0 ? 'text-danger' : 'text-success'}`}>
-              {member.submission_status == 0 ? 'You have not yet submitted' : `Submission Status: Submitted! Score: ${member.score}`}
-            </p>
-          </Col>
-          <Col md={4} className="text-md-end"> {/* Buttons Column */}
-            <div className="d-flex flex-column flex-md-row justify-content-md-end">
-              {member.submission_status == 0 ? (
-                <Button variant="primary" className="me-2 mb-2 mb-md-0" href={`/submit/${member.groupDto.id}`} disabled={isGameStarted}>
-                  Submit Now
-                </Button>
-              ) : (
-                <Button variant="primary" className="me-2 mb-2 mb-md-0" href={`/track/${member.groupDto.id}`}>
-                  Track Submission
-                </Button>
-              )}
-              <Button variant="outline-info" onClick={() => handleShareClick(member.groupDto.id)}>
-                Share
-              </Button>
-              {member.groupAdmin && (
-                <Button variant="outline-danger" className="ms-md-2" onClick={() => handleDeleteClick(member.groupDto.id)}>
-                  Delete Group
-                </Button>
-              )}
-            </div>
-          </Col>
-        </Row>
-      ))}
-    </div>
-  ) : (
-    <EmptyGroupsComponent />
-  )}
-</Card.Body>
+      <div className={styles.pageHeader}>
+        <h1 className={styles.pageTitle}>Your Groups</h1>
+      </div>
 
+      {isGameStarted && (
+        <Alert variant="danger" className={styles.gameAlert}>
+          <Alert.Heading>Game In Progress</Alert.Heading>
+          <p className="mb-0">The game has started! You can no longer submit your picks.</p>
+        </Alert>
+      )}
 
-        {/* Modal for sharing */}
-        <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
+      <Container>
+        {profileData.members.length > 0 ? (
+          profileData.members.map((member, index) => (
+            <Card key={index} className={styles.groupCard}>
+              <Card.Body>
+                <div className={styles.groupHeader}>
+                  <Image
+                    src={showDefaultIcon(member.groupDto.icon)}
+                    alt={member.groupDto.name}
+                    width={60}
+                    height={60}
+                    className={styles.groupIcon}
+                  />
+                  <h3 className={styles.groupName}>
+                    <Link href={member.submission_status === 0 ? `/submit/${member.groupDto.id}` : `/track/${member.groupDto.id}`}>
+                      {member.groupDto.name}
+                    </Link>
+                  </h3>
+                </div>
+
+                <div className={styles.groupDetails}>
+                  <div className={styles.detailItem}>
+                    <i className="fas fa-users detailIcon"></i>
+                    <span>Members: {member.groupDto.memberCount}</span>
+                  </div>
+
+                  <div className={`${styles.submissionStatus} ${member.submission_status === 0 ? styles.notSubmitted : styles.submitted}`}>
+                    {member.submission_status === 0 ? (
+                      <>
+                        <i className="fas fa-exclamation-circle"></i>
+                        <span>Not Submitted</span>
+                      </>
+                    ) : (
+                      <>
+                        <i className="fas fa-check-circle"></i>
+                        <span>Submitted • Score: {member.score}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className={styles.actionButtons}>
+                  {member.submission_status === 0 ? (
+                    <Button
+                      className={`${styles.actionButton} ${styles.primaryButton}`}
+                      href={`/submit/${member.groupDto.id}`}
+                      disabled={isGameStarted}
+                    >
+                      Submit Picks
+                    </Button>
+                  ) : (
+                    <Button
+                      className={`${styles.actionButton} ${styles.primaryButton}`}
+                      href={`/track/${member.groupDto.id}`}
+                    >
+                      Track Progress
+                    </Button>
+                  )}
+
+                  <Button
+                    className={`${styles.actionButton} ${styles.secondaryButton}`}
+                    onClick={() => handleShareClick(member.groupDto.id)}
+                  >
+                    Share Group
+                  </Button>
+
+                  {member.groupAdmin && (
+                    <Button
+                      className={`${styles.actionButton} ${styles.dangerButton}`}
+                      onClick={() => handleDeleteClick(member.groupDto.id)}
+                    >
+                      Delete Group
+                    </Button>
+                  )}
+                </div>
+              </Card.Body>
+            </Card>
+          ))
+        ) : (
+          <EmptyGroupsComponent />
+        )}
+      </Container>
+
+      {/* Share Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header className={styles.modalHeader} closeButton>
           <Modal.Title>Share Group</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <p>Invite others to join this group:</p>
-          <Row className='justify-content-center'>
-            <Col className="text-center">
-              {/* <Button variant="dark" onClick={() => handleShareOptionClick('email')}>
-                Email
-              </Button>{' '} */}
-            </Col>
-            {/* <Col>
-              <Button variant="light" onClick={() => handleShareOptionClick('existingUser')}>
-                Existing User
-              </Button>
-            </Col> */}
-            <Col>
-              <Button variant="dark" onClick={handleCopyInviteLink}>
-                Copy Link
-              </Button>
-            </Col>
-          </Row>
-
-          {selectedShareOption === 'email' && (
-            <Form onSubmit={handleFormSubmit}>
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" />
-              </Form.Group>
-              <Form.Group controlId="formBasicName">
-                <Form.Label>Recipient Name</Form.Label>
-                <Form.Control type="text" placeholder="Name" />
-              </Form.Group>
-              <Button variant="primary" type="submit" disabled={isLoading}>
-                  {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Invite'}
-              </Button>
-            </Form>
-          )}
-
-          {selectedShareOption === 'sms' && (
-            <Form onSubmit={handleFormSubmit}>
-              <Form.Group controlId="formBasicPhone">
-                <Form.Label>Phone Number</Form.Label>
-                <Form.Control type="tel" placeholder="Enter phone number" min={10} max={10}/>
-              </Form.Group>
-              <Form.Group controlId="formBasicName">
-                <Form.Label>Recipient Name</Form.Label>
-                <Form.Control type="text" placeholder="Name" />
-              </Form.Group>
-              <Button variant="primary" type="submit" disabled={isLoading}>
-                  {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Invite'}
-              </Button>
-            </Form>
-
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
+        <Modal.Body className={styles.modalBody}>
+          <p>Share this group with others:</p>
+          <Button
+            variant="primary"
+            onClick={handleCopyInviteLink}
+            className="w-100"
+          >
+            Copy Invite Link
           </Button>
-        </Modal.Footer>
-      </Modal>
-
-         {/* User Search Modal */}
-        <Modal show={showUserSearchModal} onHide={handleCloseUserSearchModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Search User</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formSearchUser">
-              <Form.Label>Search for existing user</Form.Label>
-              <Form.Control type="text" placeholder="Search by name or email" />
-            </Form.Group>
-          </Form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseUserSearchModal}>
-            Close
-          </Button>
-        </Modal.Footer>
       </Modal>
 
       {/* Delete Confirmation Modal */}
-      <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)}>
-        <Modal.Header closeButton>
+      <Modal
+        show={showDeleteConfirmation}
+        onHide={() => setShowDeleteConfirmation(false)}
+        centered
+      >
+        <Modal.Header className={styles.modalHeader} closeButton>
           <Modal.Title>Confirm Delete</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this group? All members associated with this group will be deleted.</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteConfirmation(false)}>
+        <Modal.Body className={styles.modalBody}>
+          <p>Are you sure you want to delete this group? This action cannot be undone.</p>
+          <p className="text-danger">All members associated with this group will be removed.</p>
+        </Modal.Body>
+        <Modal.Footer className={styles.modalFooter}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowDeleteConfirmation(false)}
+          >
             Cancel
           </Button>
-          <Button variant="danger" onClick={() => handleGroupDelete()}>
-            Delete Group
+          <Button
+            variant="danger"
+            onClick={handleGroupDelete}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                  className="me-2"
+                />
+                Deleting...
+              </>
+            ) : (
+              'Delete Group'
+            )}
           </Button>
         </Modal.Footer>
       </Modal>
-
-    </Card>
-    </>
+    </div>
   );
 };
 

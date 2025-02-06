@@ -4,6 +4,9 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1rem;
+    background: linear-gradient(135deg, #004864 0%, #002432 100%);
+    min-height: 100vh;
+    color: white;
 }
 
 .headerSection {
@@ -17,8 +20,9 @@
 
 .leaderboardTitle {
     font-size: 2.5rem;
-    color: #004864;
+    color: white;
     margin-bottom: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .podiumSection {
@@ -37,7 +41,7 @@
     border-radius: 12px;
     padding: 1.5rem 1rem;
     text-align: center;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -53,14 +57,17 @@
     background: linear-gradient(135deg, #ffd700 0%, #fff7e6 100%);
     padding-top: 2rem;
     margin-top: -1.5rem;
+    border: 3px solid #ffd700;
 }
 
 .secondPlace {
-    background: linear-gradient(135deg, #c0c0c0 0%, #f5f5f5 100%);
+    background: linear-gradient(135deg, #e3e3e3 0%, #ffffff 100%);
+    border: 3px solid #a0a0a0;
 }
 
 .thirdPlace {
     background: linear-gradient(135deg, #cd7f32 0%, #ffddc1 100%);
+    border: 3px solid #cd7f32;
 }
 
 .medalIcon {
@@ -97,17 +104,18 @@
 }
 
 .leaderboardList {
-    background: white;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     padding: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .leaderboardItem {
     display: flex;
     align-items: center;
     padding: 1rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     transition: background-color 0.2s ease;
 }
 
@@ -116,13 +124,13 @@
 }
 
 .leaderboardItem:hover {
-    background-color: #f8f9fa;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .rank {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #004864;
+    color: white;
     width: 60px;
 }
 
@@ -136,7 +144,7 @@
     width: 50px;
     height: 50px;
     margin-right: 1rem;
-    border: 2px solid #eee;
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .memberDetails {
@@ -147,19 +155,19 @@
     font-size: 1.1rem;
     font-weight: 500;
     margin: 0;
-    color: #2d3748;
+    color: white;
 }
 
 .memberGroup {
     font-size: 0.9rem;
-    color: #666;
+    color: rgba(255, 255, 255, 0.7);
     margin: 0;
 }
 
 .score {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #004864;
+    color: #ffd700;
     min-width: 100px;
     text-align: right;
 }

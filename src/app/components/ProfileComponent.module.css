@@ -1,59 +1,265 @@
-/* YourComponent.module.css */
+/* ProfileComponent.module.css */
 
-.card {
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border-radius: 8px;
+.pageContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  position: relative;
+}
+
+.pageHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.pageTitle {
+  font-size: 2.5rem;
+  color: #004864;
+  margin-bottom: 1rem;
+}
+
+.gameAlert {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.groupCard {
+  background: white;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.groupCard:hover {
+  transform: translateY(-4px);
+}
+
+.groupHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.groupIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px solid #e2e8f0;
+}
+
+.groupName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+}
+
+.groupName a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.groupName a:hover {
+  color: #004864;
+}
+
+.groupDetails {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4a5568;
+}
+
+.detailIcon {
+  font-size: 1.25rem;
+  color: #004864;
+}
+
+.submissionStatus {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notSubmitted {
+  background-color: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #feb2b2;
+}
+
+.submitted {
+  background-color: #f0fff4;
+  color: #38a169;
+  border: 1px solid #9ae6b4;
+}
+
+.score {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #004864;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.actionButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.primaryButton {
+  background-color: #004864;
+  color: white;
+  border: none;
+}
+
+.primaryButton:hover:not(:disabled) {
+  background-color: #003854;
+  transform: translateY(-2px);
+}
+
+.secondaryButton {
+  background-color: transparent;
+  border: 2px solid #004864;
+  color: #004864;
+}
+
+.secondaryButton:hover {
+  background-color: #f7fafc;
+}
+
+.dangerButton {
+  background-color: transparent;
+  border: 2px solid #e53e3e;
+  color: #e53e3e;
+}
+
+.dangerButton:hover {
+  background-color: #fff5f5;
+}
+
+/* Modal Styles */
+.modalHeader {
+  background-color: #004864;
+  color: white;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  padding: 1.25rem;
+}
+
+.modalBody {
+  padding: 1.5rem;
+}
+
+.modalFooter {
+  border-top: 1px solid #e2e8f0;
+  padding: 1.25rem;
+}
+
+/* Toast Styles */
+.toastContainer {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toast {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  min-width: 300px;
+  max-width: 90vw;
+  margin: 0;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.toast :global(.toast-header) {
+  background-color: #004864;
+  color: white;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 1rem;
+  font-size: 1.1rem;
+}
+
+.toast :global(.toast-body) {
+  padding: 1.25rem;
+  font-size: 1.1rem;
+  color: #2d3748;
+  text-align: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
   }
-  
-  .listGroupItem {
-    border-bottom: 1px solid #eee;
-    padding: 15px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .listGroupItem:last-child {
-    border-bottom: none;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .pageTitle {
+    font-size: 2rem;
   }
-  
-  .groupIcon {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-right: 10px;
+
+  .groupDetails {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
-  
-  .oauthButton, .modalButton {
-    margin: 5px;
-    width: auto;
+
+  .actionButtons {
+    flex-direction: column;
   }
-  
-  .formGroup {
-    margin-bottom: 15px;
+
+  .actionButton {
+    width: 100%;
   }
-  
-  .formControl {
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    padding: 10px 15px;
+
+  .groupHeader {
+    flex-direction: column;
+    text-align: center;
   }
-  
-  .formLabel {
-    margin-bottom: 5px;
-    font-weight: bold;
+
+  .groupName {
+    font-size: 1.25rem;
   }
-  
-  .modalContent {
-    padding: 20px;
+
+  .toast {
+    min-width: calc(100% - 40px);
+    margin: 0 20px;
   }
-  
-  @media (max-width: 768px) { /* Adjust the max-width as needed */
-    .btn-mobile {
-      width: 100%; /* Make buttons full width */
-      margin-bottom: 5px; /* Add space between stacked buttons */
-    }
-    .list-group-item {
-      flex-direction: column; /* Stack flex items vertically */
-      align-items: flex-start; /* Align items to the start */
-    }
-  }
+}
