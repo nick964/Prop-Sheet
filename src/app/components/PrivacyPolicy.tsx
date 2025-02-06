@@ -11,7 +11,7 @@ const PrivacyPolicy: React.FC = () => {
 
       <h2>Introduction</h2>
       <p>
-        Thank you for choosing to be part of our community at Super Bowl Prop Tracker. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice or our practices with regard to your personal information, please contact us at info@superbowlproptracker.com.
+        Thank you for choosing to be part of our community at Super Bowl Prop Tracker. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice or our practices with regard to your personal information, please contact us at nickr964@gmail.com.
       </p>
       <p>
         This privacy notice describes how we might use your information if you:
@@ -103,7 +103,7 @@ const PrivacyPolicy: React.FC = () => {
         In Short: We do not knowingly collect data from or market to children under 18 years of age.
       </p>
       <p>
-        We do not knowingly solicit data from or market to children under 18 years of age. By using the Services, you represent that you are at least 18 or that you are the parent or guardian of such a minor and consent to such minor dependent’s use of the Services. If we learn that personal information from users less than 18 years of age has been collected, we will deactivate the account and take reasonable measures to promptly delete such data from our records. If you become aware of any data we may have collected from children under age 18, please contact us at info@superbowlproptracker.com.
+        We do not knowingly solicit data from or market to children under 18 years of age. By using the Services, you represent that you are at least 18 or that you are the parent or guardian of such a minor and consent to such minor dependent’s use of the Services. If we learn that personal information from users less than 18 years of age has been collected, we will deactivate the account and take reasonable measures to promptly delete such data from our records. If you become aware of any data we may have collected from children under age 18, please contact us at nickr964@gmail.com.
       </p>
 
       <h2>Changes to This Privacy Policy</h2>
@@ -113,7 +113,7 @@ const PrivacyPolicy: React.FC = () => {
 
       <h2>Contact Us</h2>
       <p>
-        If you have questions or comments about this notice, you may email us at info@superbowlproptracker.com 
+        If you have questions or comments about this notice, you may email us at nickr964@gmail.com 
         <br />
         Nick Robinson - Super Bowl Prop Tracker
       </p>

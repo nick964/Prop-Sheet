@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
       <Container>
         <Row>
           <Col className="text-center">
-            <span>Created by Protect PA Plants LLC - 2024 - info@superbowlproptracker.com</span><br />
+            <span>Created by Nick Robinson - 2025 - nickr964@gmail.com</span><br />
               <div className='termsCondish'>
                 <Link href="/terms-and-conditions"> Terms and Conditions</Link> | <Link href="/privacy-policy">Privacy Policy</Link>
               </div>

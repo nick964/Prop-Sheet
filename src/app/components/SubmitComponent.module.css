@@ -63,14 +63,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
 }
 
 .lineValue {
-  font-size: 0.9rem;
-  color: #6c757d;
-  background-color: #e9ecef;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #004864;
+  background-color: #e7f5ff;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 2px solid #004864;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .optionsContainer {
@@ -191,6 +198,7 @@
 
   .lineValue {
     align-self: flex-start;
+    margin-top: 0.5rem;
   }
 
   .footerButtons {
