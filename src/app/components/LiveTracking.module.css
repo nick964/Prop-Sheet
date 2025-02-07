@@ -1,0 +1,239 @@
+.pageWrapper {
+  min-height: 100vh;
+  background-color: #edf2f7;
+  padding: 2rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.headerImage {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #004864;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.groupSection {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.groupHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.groupIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #004864;
+}
+
+.groupName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #004864;
+  margin: 0;
+}
+
+.statusGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.statusCard {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.statusLabel {
+  font-size: 1.1rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.statusValue {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #004864;
+  margin: 0;
+}
+
+.scoreSection {
+  background: #004864;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: white;
+  text-align: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.scoreCard {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.scoreLabel {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
+}
+
+.scoreValue {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.questionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  color: #004864;
+  margin-bottom: 1rem;
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+.questionCard {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.questionText {
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: #2d3748;
+}
+
+.lineValue {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #e7f5ff;
+  border-radius: 6px;
+  color: #004864;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.answerGrid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.answerRow {
+  font-size: 0.95rem;
+  color: #4a5568;
+}
+
+.answerLabel {
+  font-weight: 500;
+}
+
+.correct {
+  color: #38a169;
+}
+
+.incorrect {
+  color: #e53e3e;
+}
+
+.pending {
+  color: #718096;
+}
+
+.winnerMessage {
+  background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+  color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.leadMessage {
+  background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+  color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .pageWrapper {
+    padding: 1rem 0;
+  }
+
+  .statusGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .scoreSection {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+
+  .questionsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .groupHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .container {
+    padding: 1rem;
+  }
+}

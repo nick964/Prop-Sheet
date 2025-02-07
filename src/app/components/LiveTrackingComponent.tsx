@@ -1,8 +1,8 @@
-// Import necessary libraries and components
 import React from 'react';
-import { Container, Row, Col, ListGroup, Image } from 'react-bootstrap';
+import { Container, ListGroup, Image } from 'react-bootstrap';
 import { TrackingResponse } from '../models/tracking-response';
-import  ResultsPage  from '../components/ResultsWrapper';
+import ResultsPage from '../components/ResultsWrapper';
+import styles from './LiveTracking.module.css';
 
 interface Response {
   questionText: string;
@@ -22,156 +22,131 @@ interface LiveTrackingProps {
   gameOver: boolean;
 }
 
-const LiveTracking: React.FC<LiveTrackingProps> = ({ data, gameStarted, calculationFinished, gameOver }) => {
-  // Organize responses by section
+const LiveTracking: React.FC<LiveTrackingProps> = ({ 
+  data, 
+  gameStarted, 
+  calculationFinished, 
+  gameOver 
+}) => {
   const sections: { [key: string]: Response[] } = {};
   data?.responses.forEach((response) => {
     if (!sections[response.section]) {
       sections[response.section] = [];
     }
-    if(response.correctAnswer == '') {
-      response.className = 'text-secondary'
-    } else if(response.isCorrect || response.answer === response.correctAnswer) {
-      response.className = 'text-success'
-    } else {
-      response.className = 'text-danger'
-    }
     sections[response.section].push(response);
   });
 
   const showDefaultIcon = (icon: string | null | undefined) => {
-    if(icon == null || icon == '') {
-      return "/images/DefaultGroupIcon.png";
-    } else {
-      return icon;
-    }
-  }
+    return icon || "/images/DefaultGroupIcon.png";
+  };
 
+  const getStatusText = () => {
+    if (gameOver) return "Game Over";
+    if (gameStarted) return "Game in Progress";
+    return "Game Not Started";
+  };
 
+  const getCalculationText = () => {
+    return calculationFinished 
+      ? "All answers entered! Results are in!"
+      : "Still waiting for all answers to be entered..";
+  };
 
   return (
-    <Container className="mt-4">
-      <div className="live-tracking-container">
-        <div className="live-tracking-image-header">
+    <div className={styles.pageWrapper}>
+      <div className={styles.container}>
+        <div className={styles.header}>
           <Image 
-                    src={"/images/SuperBowl_Header2.png"} 
-                    alt="Group Icon"
-                    fluid
-                    
-            />
+            src="/images/SuperBowl_Header2.png"
+            alt="Super Bowl Header"
+            className={styles.headerImage}
+            fluid
+          />
+          <h1 className={`${styles.title} tracking`}>Live Submission Tracking</h1>
         </div>
 
-        <h2 className="live-tracking-header tracking">Live Submission Tracking</h2>
-        
-        <Row className="mb-4 live-tracking-group-details">
-          <Col>
-            <h3 className="group-name-title">
-              Group: 
-              <Image 
-                src={showDefaultIcon(data?.groupDetails?.icon)} 
-                alt="Group Icon"
-                roundedCircle // Optional: Makes the image round. Remove if you prefer a square or the original shape.
-                className="group-icon" // Custom class for additional styling if needed
-                style={{ width: '30px', height: '30px', marginRight: '10px' }} // Inline styles for size & spacing, adjust as needed
-              />
-              <span className="group-name">{data?.groupDetails?.name}</span>
-            </h3>
-            <div className="leader-details">
-              
-            {(data?.position == 1 && gameOver && calculationFinished) && (
-              <p className="lead-message">You are the winner!!</p>
-            )}
+        <div className={styles.groupSection}>
+          <div className={styles.groupHeader}>
+            <Image 
+              src={showDefaultIcon(data?.groupDetails?.icon)}
+              alt="Group Icon"
+              className={styles.groupIcon}
+            />
+            <h2 className={styles.groupName}>{data?.groupDetails?.name}</h2>
+          </div>
 
-            {(data?.position == 1 && gameStarted && !gameOver) && (
-              <p className="lead-message">You are currently in the lead!</p>
-            )}
-              {(calculationFinished && gameOver) && (
-                <p className="lead-message">Winner: {data?.groupDetails?.inLead?.name}</p>
-              )}
-
-              {(!calculationFinished) && (
-                <div>
-                  <p className="lead-message">Current Leader: {data?.groupDetails?.inLead?.name}</p>
-                  <p className="leader-score">{data?.groupDetails?.inLead?.name}&apos;s score: {data?.groupDetails?.inLead?.score}</p>
-                </div>
-              )}
-
-              {(!gameStarted && !gameOver && !calculationFinished) && (
-                <div>
-                  <p className="lead-message">Waiting for game to start</p>
-                </div>
-              )}
+          {(data?.position === 1 && gameOver && calculationFinished) && (
+            <div className={styles.winnerMessage}>
+              🏆 Congratulations! You are the winner!!
             </div>
-          </Col>
-        </Row>
+          )}
 
-        <Row className="mb-4 live-tracking-group-details">
-          <Col xs={12} md={6} className='mb-3'>
-            <h3 className="group-name-title text-center">
-              Game Status: <br />
-              <span className="statusResult">
-                {gameOver ? "Game Over" : (gameStarted ? "Game in Progress" : "Game Not Started")}
-                
-              </span>
-            </h3>
-          </Col>
-          <Col xs={12} md={6}>
-            <h3 className="group-name-title text-center">
-              Calulation Status: <br/>
-              <span className="statusResult">
-                {calculationFinished ? "All answers entered! Results are in!" : 
-                "Still waiting for all answers to be entered.."}
-              </span>
-            </h3>
-          </Col>
-        </Row>
-        
-        <Row className="mb-3 scoreHighlightRow">
-          <Col md={12} className="scoreHighlightCol">
-            <div className="user-details groupPosition">
-              <h3>
-                Group Position: <span className="positionNumber">{data?.position}</span>
-              </h3>
+          {(data?.position === 1 && gameStarted && !gameOver) && (
+            <div className={styles.leadMessage}>
+              🌟 You are currently in the lead!
             </div>
-            <div className="totalScore">
-              <h3>
-                Total Score: <span className="scoreNumber">{data?.totalScore}</span>
-              </h3>
-            </div>
-          </Col>
-        </Row>
+          )}
 
-        <Row>
-          {(data?.groupDetails?.id !== null && data?.groupDetails.id !== undefined) && 
+          <div className={styles.statusGrid}>
+            <div className={styles.statusCard}>
+              <div className={styles.statusLabel}>Game Status</div>
+              <div className={styles.statusValue}>{getStatusText()}</div>
+            </div>
+            <div className={styles.statusCard}>
+              <div className={styles.statusLabel}>Calculation Status</div>
+              <div className={styles.statusValue}>{getCalculationText()}</div>
+            </div>
+          </div>
+
+          <div className={styles.scoreSection}>
+            <div className={styles.scoreCard}>
+              <div className={styles.scoreLabel}>Group Position</div>
+              <div className={styles.scoreValue}>#{data?.position}</div>
+            </div>
+            <div className={styles.scoreCard}>
+              <div className={styles.scoreLabel}>Total Score</div>
+              <div className={styles.scoreValue}>{data?.totalScore}</div>
+            </div>
+          </div>
+
+          {(data?.groupDetails?.id !== null && data?.groupDetails.id !== undefined) && (
             <ResultsPage groupId={data?.groupDetails.id} isGlobal={false} />
-          }
-        </Row>
+          )}
+        </div>
+
+        <div className={styles.questionsGrid}>
+          {Object.entries(sections).map(([section, sectionResponses]) => (
+            <React.Fragment key={section}>
+              <h3 className={styles.sectionTitle}>{section}</h3>
+              {sectionResponses.map((response, index) => (
+                <div key={index} className={styles.questionCard}>
+                  <div className={styles.questionText}>
+                    {response.questionText}
+                    {response.lineValue && (
+                      <span className={styles.lineValue}>Line: {response.lineValue}</span>
+                    )}
+                  </div>
+                  <div className={styles.answerGrid}>
+                    <div className={styles.answerRow}>
+                      <span className={styles.answerLabel}>Your Answer:</span>{' '}
+                      <span className={response.correctAnswer ? (response.isCorrect ? styles.correct : styles.incorrect) : styles.pending}>
+                        {response.answer}
+                      </span>
+                    </div>
+                    <div className={styles.answerRow}>
+                      <span className={styles.answerLabel}>Correct Answer:</span>{' '}
+                      <span className={response.correctAnswer ? styles.correct : styles.pending}>
+                        {response.correctAnswer || 'Pending...'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
       </div>
-
-      <Row>
-        {Object.entries(sections).map(([section, sectionResponses]) => (
-          <Col key={section} md={6}>
-            <div className="mt-4">
-              <h3 className="text-center tracking">{section}</h3>
-              <ListGroup>
-                {sectionResponses.map((response, index) => (
-                  <ListGroup.Item key={index} className={response.className}>
-                    <strong>{response.questionText}
-                    {response.lineValue ? ` (Line: ${response.lineValue})` : ""}
-                    </strong>
-
-                    <br />
-                    Your Answer: {response.answer}
-                    <br />
-                    Correct Answer: {response.correctAnswer}
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-            </div>
-          </Col>
-        ))}
-      </Row>
-    </Container>
+    </div>
   );
 };
 

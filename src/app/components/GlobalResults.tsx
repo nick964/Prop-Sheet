@@ -67,7 +67,7 @@ const GlobalResultsPage: React.FC = () => {
             <div className={styles.headerSection}>
                 <div className={styles.imageHeader}>
                     <Image 
-                        src="/images/SuperBowl_Header2.png"
+                        src="/images/SuperBowl_Header3.png"
                         alt="Super Bowl Header"
                         fluid
                     />
