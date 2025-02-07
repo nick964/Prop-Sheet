@@ -3,6 +3,7 @@ import React from 'react';
 import { Container, Button, Row, Col, Card } from 'react-bootstrap';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 const imageStyle = {
   borderRadius: '8px',
@@ -12,6 +13,8 @@ const imageStyle = {
 }
 
 const HomePage: React.FC = () => {
+  const { data: session } = useSession();
+
   return (
     <>
       {/* Hero Section */}
@@ -25,9 +28,9 @@ const HomePage: React.FC = () => {
                   Join the ultimate Super Bowl experience! Create groups, make predictions, and compete with friends in real-time during the big game.
                 </p>
                 <div className="d-flex gap-3 justify-content-center">
-                  <Link href="/signup">
+                  <Link href={session ? "/profile" : "/signup"}>
                     <Button variant="light" size="lg" className="fw-bold">
-                      Get Started
+                      {session ? "View Your Groups" : "Get Started"}
                     </Button>
                   </Link>
                   <Link href="/global-leaderboard">
@@ -131,11 +134,11 @@ const HomePage: React.FC = () => {
             <Col md={8}>
               <h2 className="text-white mb-4">Ready to Join the Fun?</h2>
               <p className="lead text-white mb-4">
-                Create your account now and start making your Super Bowl predictions!
+                {session ? "Create a group and start making your Super Bowl predictions!" : "Create your account now and start making your Super Bowl predictions!"}
               </p>
-              <Link href="/signup">
+              <Link href={session ? "/create-group" : "/signup"}>
                 <Button variant="light" size="lg" className="fw-bold px-5">
-                  Sign Up Now
+                  {session ? "Create Group" : "Sign Up Now"}
                 </Button>
               </Link>
             </Col>

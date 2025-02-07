@@ -172,6 +172,75 @@
     text-align: right;
 }
 
+.gameNotStartedContainer {
+    padding: 2rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.messageCard {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 3px solid #004864;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.messageIcon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    animation: bounce 2s infinite;
+}
+
+.messageTitle {
+    font-size: 2.5rem;
+    color: #004864;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.messageText {
+    font-size: 1.25rem;
+    color: #495057;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.messageTip {
+    background: #e7f5ff;
+    color: #004864;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1.1rem;
+    display: inline-block;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .podiumRow {
@@ -203,5 +272,32 @@
         width: 100%;
         text-align: left;
         margin-left: 60px;
+    }
+
+    .gameNotStartedContainer {
+        padding: 1rem;
+    }
+
+    .messageCard {
+        padding: 2rem 1rem;
+    }
+
+    .messageIcon {
+        font-size: 3rem;
+    }
+
+    .messageTitle {
+        font-size: 2rem;
+    }
+
+    .messageText {
+        font-size: 1.1rem;
+        padding: 0 0.5rem;
+    }
+
+    .messageTip {
+        font-size: 1rem;
+        padding: 0.75rem;
+        margin: 0 0.5rem;
     }
 }
