@@ -143,6 +143,7 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
         resetForm();
       } else {
         const error = await response.json();
+        console.error('Error during signup:', error);
         alert(error.message || 'An error occurred during signup');
       }
     } catch (error) {
