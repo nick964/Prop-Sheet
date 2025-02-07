@@ -7,6 +7,8 @@ interface GroupDto {
     groupRole: number;
     memberCount: number;
     icon: string | null;
+    venmoLink: string | null;
+    cost: number | 0;
   }
 
 export interface Member {

@@ -28,7 +28,15 @@ export default function GroupForm() {
         name: Yup.string()
             .required('A group name is required')
             .min(3, 'Group name must be at least 3 characters')
-            .max(50, 'Group name must not exceed 50 characters')
+            .max(50, 'Group name must not exceed 50 characters'),
+        venmoLink: Yup.string()
+            .matches(/^@?[\w-]+$/, 'Invalid Venmo username format')
+            .transform(value => value.startsWith('@') ? value : `@${value}`)
+            .nullable(),
+        groupCost: Yup.number()
+            .min(0, 'Group cost cannot be negative')
+            .nullable()
+            .transform((value) => (isNaN(value) ? null : value))
     });
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +64,7 @@ export default function GroupForm() {
 
         Object.keys(values).forEach(key => {
             const value = values[key as keyof typeof values];
-            if (key !== 'groupIcon' && value !== undefined && value !== null) {
+            if (key !== 'groupIcon' && value !== undefined && value !== null && value !== '') {
                 formData.append(key, value.toString());
             }
         });
@@ -101,6 +109,8 @@ export default function GroupForm() {
                             initialValues={{
                                 name: '',
                                 description: '',
+                                venmoLink: '',
+                                groupCost: '',
                                 groupIcon: null,
                             }}
                             validationSchema={validationSchema}
@@ -140,6 +150,50 @@ export default function GroupForm() {
                                         />
                                         <ErrorMessage
                                             name="description"
+                                            component="div"
+                                            className="invalid-feedback"
+                                        />
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <label htmlFor="venmoLink" className={styles.formLabel}>
+                                            Venmo Username (Optional)
+                                        </label>
+                                        <Field
+                                            type="text"
+                                            className={`form-control ${styles.formInput} ${errors.venmoLink && touched.venmoLink ? 'is-invalid' : ''}`}
+                                            id="venmoLink"
+                                            name="venmoLink"
+                                            placeholder="@username"
+                                        />
+                                        <small className="text-muted">
+                                            Enter your Venmo username if you want to collect payments from group members
+                                        </small>
+                                        <ErrorMessage
+                                            name="venmoLink"
+                                            component="div"
+                                            className="invalid-feedback"
+                                        />
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <label htmlFor="groupCost" className={styles.formLabel}>
+                                            Entry Fee (Optional)
+                                        </label>
+                                        <Field
+                                            type="number"
+                                            className={`form-control ${styles.formInput} ${errors.groupCost && touched.groupCost ? 'is-invalid' : ''}`}
+                                            id="groupCost"
+                                            name="groupCost"
+                                            placeholder="Enter amount in dollars"
+                                            min="0"
+                                            step="0.01"
+                                        />
+                                        <small className="text-muted">
+                                            Enter the amount each member should pay to join
+                                        </small>
+                                        <ErrorMessage
+                                            name="groupCost"
                                             component="div"
                                             className="invalid-feedback"
                                         />

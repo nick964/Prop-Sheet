@@ -62,7 +62,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
       await navigator.clipboard.writeText(inviteLink);
       setToastMessage('Invite link copied to clipboard!');
       setShowToast(true);
-      setShowModal(false); // Close the modal after successful copy
+      setShowModal(false);
     } catch (err) {
       console.error("Failed to copy: ", err);
       setToastMessage('Failed to copy the link. Please try again.');
@@ -155,6 +155,22 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
                     <i className="fas fa-users detailIcon"></i>
                     <span>Members: {member.groupDto.memberCount}</span>
                   </div>
+
+                  {(member.groupDto.venmoLink || member.groupDto.cost) && (
+                    <div className={styles.detailItem}>
+                      <i className="fas fa-money-bill detailIcon"></i>
+                      <a 
+                        href={`https://venmo.com/${member.groupDto.venmoLink?.replace('@', '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.venmoLink}
+                      >
+                        Pay via Venmo {member.groupDto.cost && `($${member.groupDto.cost})`}
+                        <br />
+                        <span className={styles.venmoUsername}>{member.groupDto.venmoLink}</span>
+                      </a>
+                    </div>
+                  )}
 
                   <div className={`${styles.submissionStatus} ${member.submission_status === 0 ? styles.notSubmitted : styles.submitted}`}>
                     {member.submission_status === 0 ? (
