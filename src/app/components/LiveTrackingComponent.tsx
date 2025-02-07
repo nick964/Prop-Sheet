@@ -57,7 +57,7 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({
       <div className={styles.container}>
         <div className={styles.header}>
           <Image 
-            src="/images/SuperBowl_Header2.png"
+            src="/images/SuperBowl_Header3.png"
             alt="Super Bowl Header"
             className={styles.headerImage}
             fluid

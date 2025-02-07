@@ -1,14 +1,15 @@
 "use client";
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { Container, Col, Row, Button, Modal} from "react-bootstrap";
+import { Container, Row, Col, Button, Modal, Image } from "react-bootstrap";
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
-import { BasicGroupDetails} from '../models/tracking-response';
+import { BasicGroupDetails } from '../models/tracking-response';
 import styles from './SignUpForm.module.css';
+import { FaFacebook, FaTwitter, FaGoogle } from 'react-icons/fa';
 
 interface SignUpFormValues {
   firstName: string;
@@ -27,10 +28,11 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
   const router = useRouter();
   const { data: session } = useSession();
   const [showModal, setShowModal] = React.useState(false);
-  const [showAlreadyInModal, setshowAlreadyInModal] = React.useState(false);
+  const [showAlreadyInModal, setShowAlreadyInModal] = React.useState(false);
   const [groupDetails, setGroupDetails] = React.useState<BasicGroupDetails | null>(null);
   const [profilePicture, setProfilePicture] = React.useState<File | null>(null);
-  const accessToken: string | undefined = session?.user?.accessToken;
+  const accessToken = session?.user?.accessToken;
+
   const initialValues: SignUpFormValues = {
     firstName: '',
     lastName: '',
@@ -41,68 +43,74 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
   };
 
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required('First name is required'),
-    lastName: Yup.string().required('Last name is required'),
-    email: Yup.string().min(6, 'Username must be at least 6 characters').required('Email is required'),
-    password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+    firstName: Yup.string()
+      .required('First name is required')
+      .min(2, 'First name must be at least 2 characters'),
+    lastName: Yup.string()
+      .required('Last name is required')
+      .min(2, 'Last name must be at least 2 characters'),
+    email: Yup.string()
+      .required('Email is required')
+      .min(6, 'Email must be at least 6 characters'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(6, 'Password must be at least 6 characters'),
   });
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
-    setProfilePicture(file); // Update the state with the new file
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        return;
+      }
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+      setProfilePicture(file);
+    }
   };
 
-  const handleSignIn = async (provider: string, groupId: string) => {
-    console.log('logging groupId handle sign in');
-    console.log(groupId);
-    var myCallbackUrl = `/signedup`;
-    if(groupId) {
-      myCallbackUrl = myCallbackUrl + '?groupid=' + groupId;
-    }
-    await signIn(provider, { callbackUrl: myCallbackUrl });
-  }
+  const handleSignIn = async (provider: string) => {
+    const callbackUrl = groupId ? `/signedup?groupid=${groupId}` : '/signedup';
+    await signIn(provider, { callbackUrl });
+  };
 
   const fetchGroupDetails = async () => {
-    console.log('fetching group details if user is already signed in');
-    try {
-      if (accessToken && groupId) {
-        const requestOptions = {
-          method: 'GET',
-          headers: { 'Authorization': `Bearer ${accessToken}` }
-        };
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/details?groupId=${groupId}`, requestOptions);
-
+    if (accessToken && groupId) {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}groups/details?groupId=${groupId}`,
+          { headers: { 'Authorization': `Bearer ${accessToken}` } }
+        );
         if (response.ok) {
-          const result: BasicGroupDetails = await response.json();
-          console.log('group details');
-          console.log(result);
+          const result = await response.json();
           setGroupDetails(result);
-          setshowAlreadyInModal(true);
-        } 
+          setShowAlreadyInModal(true);
+        }
+      } catch (error) {
+        console.error('Error fetching group data:', error);
       }
-    } catch (error) {
-      console.error('Error fetching group data:', error);
     }
   };
 
   const addToGroup = async () => {
-    console.log('adding user to group if already signed in');
-    try {
-      if (accessToken && groupId) {
-        const requestOptions = {
-          method: 'POST',
-          headers: { 
-                      'Authorization': `Bearer ${accessToken}`, 
-                      'Content-Type': 'application/json'
-                   }
-          };
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}groups/addUser?groupId=${groupId}`, requestOptions);
+    if (accessToken && groupId) {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}groups/addUser?groupId=${groupId}`,
+          {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${accessToken}` }
+          }
+        );
         if (response.ok) {
           router.push('/profile');
-        } 
+        }
+      } catch (error) {
+        console.error('Error adding user to group:', error);
       }
-    } catch (error) {
-      console.error('Error adding user to group', error);
     }
   };
 
@@ -110,167 +118,184 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
     if (session && accessToken && groupId) {
       fetchGroupDetails();
     }
-    }, []);
-
+  }, [session, accessToken, groupId]);
 
   const handleSubmit = async (values: SignUpFormValues, { resetForm }: { resetForm: () => void }) => {
-    // Handle form submission here (e.g., send data to a server)
     const formData = new FormData();
-
-     // Append all form fields to the formData object
-     Object.keys(values).forEach(key => {
-      const value = values[key as keyof typeof values];
-      if (key !== 'picture' && value !== undefined && value !== null) {
-        // Append only if value is not undefined and not null
-        formData.append(key, value.toString()); // Convert value to string
+    Object.entries(values).forEach(([key, value]) => {
+      if (key !== 'picture' && value) {
+        formData.append(key, value.toString());
       }
     });
 
     if (profilePicture) {
-      formData.append('picture', profilePicture, profilePicture.name); // Append the file to the formData
+      formData.append('picture', profilePicture);
     }
 
-    const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signup`, {
-      method: 'POST',
-      body: formData,
-    }).then((res) => {
-      console.log(res);
-      if (res.ok) {
-        console.log('success');
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signup`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
         setShowModal(true);
-       
+        resetForm();
       } else {
-        console.log('error');
+        const error = await response.json();
+        alert(error.message || 'An error occurred during signup');
       }
-    });
-    console.log(result);
-    resetForm();
-
-  };
-
-  const handleClose = () => {
-    setShowModal(false);
-    router.push('/api/auth/signin/credentials');
-  };
-
-  const handleAlreadyInModal = () => {
-    setshowAlreadyInModal(false);
+    } catch (error) {
+      alert('An error occurred during signup');
+    }
   };
 
   return (
-    <>
-    <Container>
-      <Row className="justify-content-md-center mt-5">
-        <Col md={6}>
-          <h1>Sign Up</h1>
-          <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-      <Form>
-        <div className="mb-3">
-          <label htmlFor="firstName" className="form-label">
-            First Name
-          </label>
-          <Field type="text" className="form-control" id="firstName" name="firstName" />
-          <ErrorMessage name="firstName" component="div" className="text-danger" />
-        </div>
+    <div className={styles.pageContainer}>
+      <Container>
+        <Row className="justify-content-center">
+          <Col md={8} lg={6}>
+            <div className={styles.pageHeader}>
+              <h1 className={styles.pageTitle}>Create Your Account</h1>
+              <p className={styles.pageSubtitle}>
+                Join the ultimate Super Bowl experience
+              </p>
+            </div>
 
-        <div className="mb-3">
-          <label htmlFor="lastName" className="form-label">
-            Last Name
-          </label>
-          <Field type="text" className="form-control" id="lastName" name="lastName" />
-          <ErrorMessage name="lastName" component="div" className="text-danger" />
-        </div>
+            <div className={styles.formCard}>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+              >
+                <Form>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>First Name</label>
+                    <Field
+                      type="text"
+                      name="firstName"
+                      className={styles.formInput}
+                      placeholder="Enter your first name"
+                    />
+                    <ErrorMessage name="firstName" component="div" className={styles.errorMessage} />
+                  </div>
 
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Username
-          </label>
-          <Field type="text" className="form-control" id="email" name="email" />
-          <ErrorMessage name="email" component="div" className="text-danger" />
-        </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Last Name</label>
+                    <Field
+                      type="text"
+                      name="lastName"
+                      className={styles.formInput}
+                      placeholder="Enter your last name"
+                    />
+                    <ErrorMessage name="lastName" component="div" className={styles.errorMessage} />
+                  </div>
 
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <Field type="password" className="form-control" id="password" name="password" />
-          <ErrorMessage name="password" component="div" className="text-danger" />
-        </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Email</label>
+                    <Field
+                      type="email"
+                      name="email"
+                      className={styles.formInput}
+                      placeholder="Enter your email"
+                    />
+                    <ErrorMessage name="email" component="div" className={styles.errorMessage} />
+                  </div>
 
-        <div className="mb-3">
-            <label htmlFor="picture" className="form-label">
-              Picture
-            </label>
-            <input id="picture" name="picture" type="file" onChange={handleFileChange} className="form-control" />
-            <ErrorMessage name="picture" component="div" className="text-danger" />
-        </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Password</label>
+                    <Field
+                      type="password"
+                      name="password"
+                      className={styles.formInput}
+                      placeholder="Create a password"
+                    />
+                    <ErrorMessage name="password" component="div" className={styles.errorMessage} />
+                  </div>
 
-          <Field type="hidden" className="form-control" id="groupId" name="groupId" value={groupId} />
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Profile Picture</label>
+                    <input
+                      type="file"
+                      onChange={handleFileChange}
+                      className={styles.fileInput}
+                      accept="image/*"
+                    />
+                    <small className="text-muted d-block mt-1">
+                      Optional. Maximum file size: 5MB
+                    </small>
+                  </div>
 
-        <button type="submit" className="btn btn-primary">
-          Sign Up
-        </button>
-      </Form>
-    </Formik>
+                  <button type="submit" className={styles.submitButton}>
+                    Create Account
+                  </button>
+                </Form>
+              </Formik>
 
-          <div id="OauthSigninOptions"className={`mt-4 ${styles.OauthSigninOptions}`}>
-            <h2>Or sign up with</h2>
-            <Button variant="outline-info" onClick={() => handleSignIn('twitter', groupId)}  className={`oauth-button ${styles.oauthButton}`}>
-              Sign up with Twitter
-            </Button>
-            <Button variant="outline-danger" onClick={() => handleSignIn('google', groupId)}  className={`oauth-button ${styles.oauthButton}`}>
-              Sign up with Google
-            </Button>
-          </div>
-        </Col>
-      </Row>
-    </Container>
+              <div className={styles.divider}>
+                <span className={styles.dividerText}>or continue with</span>
+              </div>
 
-    <Modal show={showAlreadyInModal} onHide={handleAlreadyInModal}>
-      <Modal.Header closeButton>
-        <Modal.Title>Join Existing Group?</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <div>
-          <p>You are already signed in. Do you want to join the group?</p>
-          <div>
-            <p>Group Name: {groupDetails?.name}</p>
-            <p>Group Admin: {groupDetails?.admin?.name}</p>
-          </div>  
-        </div>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary" onClick={addToGroup}>
-          Join Group
-        </Button>
-      </Modal.Footer>
-    </Modal>
+              <div className={styles.socialButtons}>
+                <button
+                  onClick={() => handleSignIn('twitter')}
+                  className={`${styles.socialButton} ${styles.twitter}`}
+                >
+                  <FaTwitter /> Continue with Twitter
+                </button>
+                <button
+                  onClick={() => handleSignIn('google')}
+                  className={`${styles.socialButton} ${styles.google}`}
+                >
+                  <FaGoogle /> Continue with Google
+                </button>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </Container>
 
-    <Modal 
-      show={showModal} 
-      onHide={handleClose} 
-      backdrop="static">
-      <Modal.Header closeButton>
-        <Modal.Title>Sign Up Successful</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <div className='text-center mb-5'>
-          <h5>Woohoo, you are successfully signed up!</h5>
-        </div>
-        
-        <h5 className='text-center'>You will now be redirected to the login page to login.</h5>
-        
+      <Modal show={showAlreadyInModal} onHide={() => setShowAlreadyInModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Join Existing Group?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>You are already signed in. Would you like to join this group?</p>
+          {groupDetails && (
+            <div>
+              <p><strong>Group Name:</strong> {groupDetails.name}</p>
+              <p><strong>Group Admin:</strong> {groupDetails.admin?.name}</p>
+            </div>
+          )}
         </Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary" onClick={handleClose}>
-          OK
-        </Button>
-      </Modal.Footer>
-    </Modal>
-    </>
+        <Modal.Footer>
+          <Button variant="primary" onClick={addToGroup}>
+            Join Group
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-    
-
+      <Modal show={showModal} onHide={() => {
+        setShowModal(false);
+        router.push('/api/auth/signin/credentials');
+      }} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Sign Up Successful</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="text-center">
+          <h5 className="mb-4">Welcome to Super Bowl Prop Tracker!</h5>
+          <p>You can now sign in with your credentials.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => {
+            setShowModal(false);
+            router.push('/api/auth/signin/credentials');
+          }}>
+            Continue to Sign In
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
   );
 };
 
