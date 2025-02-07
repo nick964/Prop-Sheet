@@ -120,7 +120,7 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
     }
   }, [session, accessToken, groupId]);
 
-  const handleSubmit = async (values: SignUpFormValues, { resetForm }: { resetForm: () => void }) => {
+  const handleSubmit = async (values: SignUpFormValues, { resetForm }: { resetForm: () => void }) => { 
     const formData = new FormData();
     console.log('values:', values);
     console.log('starting submit');
@@ -131,8 +131,12 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
     });
 
     if (profilePicture) {
+      console.log('Profile picture:', profilePicture);
+      console.log('Type:', profilePicture.type);
+      console.log('Size:', profilePicture.size);
       formData.append('picture', profilePicture);
     }
+    
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signup`, {
