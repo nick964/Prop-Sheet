@@ -160,8 +160,8 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
         alert(error.message || 'An error occurred during signup');
       }
     } catch (error) {
-      console.log('Unhandeled Error during signup:', error);
-      alert('Unhandled error occurred during signup');
+      console.log('Taking a photo from your phone is broken, try using a saved picture:', error);
+      alert('Taking a photo from your phone is broken, try using a saved picture:');
     }
   };
 
