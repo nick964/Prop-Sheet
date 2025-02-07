@@ -136,7 +136,13 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
       console.log('Size:', profilePicture.size);
       formData.append('picture', profilePicture);
     }
-    
+
+      // **Log each entry in FormData** before sending
+    console.log('=== FormData contents ===');
+    formData.forEach((val, key) => {
+      console.log('Key:', key, 'Value:', val);
+    });
+      
 
     try {
       console.log('attempting fetch call')
