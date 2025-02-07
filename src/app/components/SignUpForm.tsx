@@ -122,6 +122,8 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
 
   const handleSubmit = async (values: SignUpFormValues, { resetForm }: { resetForm: () => void }) => {
     const formData = new FormData();
+    console.log('values:', values);
+    console.log('starting submit');
     Object.entries(values).forEach(([key, value]) => {
       if (key !== 'picture' && value) {
         formData.append(key, value.toString());
@@ -147,6 +149,7 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
         alert(error.message || 'An error occurred during signup');
       }
     } catch (error) {
+      console.log('Error during signup:', error);
       alert('An error occurred during signup');
     }
   };
