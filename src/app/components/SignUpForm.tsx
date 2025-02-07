@@ -139,6 +139,7 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
     
 
     try {
+      console.log('attempting fetch call')
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}api/auth/signup`, {
         method: 'POST',
         body: formData,
@@ -153,8 +154,8 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
         alert(error.message || 'An error occurred during signup');
       }
     } catch (error) {
-      console.log('Error during signup:', error);
-      alert('An error occurred during signup');
+      console.log('Unhandeled Error during signup:', error);
+      alert('Unhandled error occurred during signup');
     }
   };
 
