@@ -82,11 +82,11 @@ const GlobalResultsPage: React.FC = () => {
                         <div className={styles.messageIcon}>🏈</div>
                         <h2 className={`${styles.messageTitle} tracking`}>Kickoff Countdown</h2>
                         <p className={styles.messageText}>
-                            The big game hasn't started yet! Get ready for an exciting matchup and 
+                            The super bowl has not started yet! Get ready for an exciting matchup and 
                             watch this space to see how your predictions stack up against others.
                         </p>
                         <div className={styles.messageTip}>
-                            Make sure you've submitted your predictions before kickoff!
+                            Make sure you&apos;ve submitted your predictions before kickoff!
                         </div>
                     </div>
                 </div>
