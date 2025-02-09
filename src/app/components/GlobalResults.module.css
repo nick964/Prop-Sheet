@@ -25,6 +25,20 @@
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.subLeaderboardTitle {
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.finalResultTitle {
+    font-size: 2rem;
+    color: rgb(198, 36, 36);
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .podiumSection {
     margin-bottom: 3rem;
 }

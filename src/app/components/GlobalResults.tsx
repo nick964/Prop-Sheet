@@ -15,6 +15,8 @@ const GlobalResultsPage: React.FC = () => {
     const [members, setMembers] = useState<Member[]>([]);
     const [loading, setLoading] = useState(true);
     const [gameStarted, setGameStarted] = useState(false);
+    const [gameEnded, setGameEnded] = useState(false);
+    const [allAnswersIn, setAllAnswersIn] = useState(false);
     const { data: session, status } = useSession();
     const accessToken = session?.user?.accessToken;
 
@@ -33,7 +35,11 @@ const GlobalResultsPage: React.FC = () => {
                     if (configResponse.ok) {
                         const configRules: ConfigResponse[] = await configResponse.json();
                         const gameStartedRule = configRules.find(rule => rule.rule === 'game_started');
+                        const gameEndedRule = configRules.find(rule => rule.rule === 'game_ended');
+                        const allAnswersInRule = configRules.find(rule => rule.rule === 'calculation_finished');
                         setGameStarted(gameStartedRule?.enabled || false);
+                        setGameEnded(gameEndedRule?.enabled || false);
+                        setAllAnswersIn(allAnswersInRule?.enabled || false);
 
                         // Only fetch leaderboard data if game has started
                         if (gameStartedRule?.enabled) {
@@ -112,6 +118,24 @@ const GlobalResultsPage: React.FC = () => {
                     />
                 </div>
                 <h1 className={`${styles.leaderboardTitle} tracking`}>Global Leaderboard</h1>
+                {!gameEnded && (
+                    <div className={styles.gameStatus}>
+                        <div className={styles.statusIcon}>🏈</div>
+                        <div className={`${styles.subLeaderboardTitle} tracking`}>Game Still in progress...</div>
+                    </div>
+                )}
+                {!allAnswersIn && gameEnded && (
+                    <div className={styles.gameStatus}>
+                        <div className={styles.statusIcon}>🏈</div>
+                        <div className={`${styles.subLeaderboardTitle} tracking`}>Still calculating answers...</div>
+                    </div>
+                )}
+                {allAnswersIn && gameEnded && (
+                    <div className={styles.gameStatus}>
+                        <div className={`${styles.finalResultTitle} tracking`}>Final Results!</div>
+                    </div>
+                )}
+                
             </div>
 
             {topThree.length > 0 && (
