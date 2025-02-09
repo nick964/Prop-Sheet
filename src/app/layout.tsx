@@ -8,6 +8,7 @@ import { getServerSession } from "next-auth/next";
 import { options } from './api/auth/[...nextauth]/options'; // ⚠️ Make sure this is the correct path
 import NavBar from './NavBar';
 import Footer from './components/Footer';
+import { Analytics } from "@vercel/analytics/react"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -32,6 +33,7 @@ export default async function RootLayout({
               <main>
                 <Container fluid>
                   {children}
+                  <Analytics />
                 </Container>
               </main>
               <Footer />
