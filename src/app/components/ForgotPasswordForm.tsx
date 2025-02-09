@@ -75,7 +75,7 @@ const ForgotPasswordForm: React.FC = () => {
               {success ? (
                 <Alert variant="success">
                   <h4>Check your email</h4>
-                  <p>We've sent you instructions to reset your password.</p>
+                  <p>We&apos;ve sent you instructions to reset your password.</p>
                   <div className={styles.signupLink}>
                     <Link href="/login">Return to login</Link>
                   </div>

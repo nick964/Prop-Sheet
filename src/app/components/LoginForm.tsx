@@ -128,7 +128,7 @@ const LoginForm: React.FC = () => {
               </div>
 
               <div className={styles.signupLink}>
-                Don't have an account? <Link href="/signup">Sign up</Link>
+                Don&apos;t have an account? <Link href="/signup">Sign up</Link>
               </div>
               <div className={styles.signupLink}>
                 <Link href="/forgot-password">Forgot Password?</Link>
