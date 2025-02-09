@@ -213,12 +213,20 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
                   </Button>
 
                   {member.groupAdmin && (
-                    <Button
-                      className={`${styles.actionButton} ${styles.dangerButton}`}
-                      onClick={() => handleDeleteClick(member.groupDto.id)}
-                    >
-                      Delete Group
-                    </Button>
+                    <>
+                      <Button
+                        className={`${styles.actionButton} ${styles.secondaryButton}`}
+                        href={`/update-group/${member.groupDto.id}`}
+                      >
+                        Edit Group
+                      </Button>
+                      <Button
+                        className={`${styles.actionButton} ${styles.dangerButton}`}
+                        onClick={() => handleDeleteClick(member.groupDto.id)}
+                      >
+                        Delete Group
+                      </Button>
+                    </>
                   )}
                 </div>
               </Card.Body>
