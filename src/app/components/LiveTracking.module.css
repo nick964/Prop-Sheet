@@ -38,9 +38,13 @@
 
 .groupHeader {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
   margin-bottom: 1rem;
+}
+
+.groupInfo {
+  flex: 1;
 }
 
 .groupIcon {
@@ -49,6 +53,7 @@
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #004864;
+  flex-shrink: 0;
 }
 
 .groupName {
@@ -56,6 +61,54 @@
   font-weight: 600;
   color: #004864;
   margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.paymentInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cost {
+  background-color: #e7f5ff;
+  color: #004864;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.venmoLink {
+  background-color: #008CFF;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.venmoLink:hover {
+  background-color: #0070CC;
+  color: white;
+  text-decoration: none;
+}
+
+.groupDescription {
+  color: #4a5568;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  margin-bottom: 1rem;
+  white-space: pre-line;
 }
 
 .statusGrid {
@@ -226,7 +279,21 @@
 
   .groupHeader {
     flex-direction: column;
+    align-items: center;
     text-align: center;
+  }
+
+  .groupInfo {
+    text-align: center;
+  }
+
+  .groupDescription {
+    padding: 0 1rem;
+  }
+
+  .paymentInfo {
+    justify-content: center;
+    gap: 0.75rem;
   }
 
   .title {

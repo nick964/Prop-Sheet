@@ -4,6 +4,8 @@ export interface GroupDetails {
   id: number;
   name: string;
   description: string;
+  venmo: string;
+  cost: number;
   memberCount: number;
   icon: string | null;
   inLead: Member
@@ -26,6 +28,7 @@ export interface TrackingResponse {
     totalScore: number;
     gameStarted: boolean;
     responses: Response[]; 
+
 
 }
 

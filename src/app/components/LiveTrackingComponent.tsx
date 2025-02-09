@@ -72,7 +72,31 @@ const LiveTracking: React.FC<LiveTrackingProps> = ({
               alt="Group Icon"
               className={styles.groupIcon}
             />
-            <h2 className={styles.groupName}>{data?.groupDetails?.name}</h2>
+            <div className={styles.groupInfo}>
+              <h2 className={styles.groupName}>{data?.groupDetails?.name}</h2>
+              {(data?.groupDetails?.venmo || data?.groupDetails?.cost) && (
+                <div className={styles.paymentInfo}>
+                  {data.groupDetails.cost > 0 && (
+                    <span className={styles.cost}>Entry Fee: ${data.groupDetails.cost}</span>
+                  )}
+                  {data.groupDetails.venmo && (
+                    <a 
+                      href={`https://venmo.com/${data.groupDetails.venmo.replace('@', '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.venmoLink}
+                    >
+                      Pay via Venmo: @{data.groupDetails.venmo}
+                    </a>
+                  )}
+                </div>
+              )}
+              {data?.groupDetails?.description && (
+                <p className={styles.groupDescription}>
+                  {data.groupDetails.description}
+                </p>
+              )}
+            </div>
           </div>
 
           {(data?.position === 1 && gameOver && calculationFinished) && (
