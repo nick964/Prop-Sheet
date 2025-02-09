@@ -292,7 +292,7 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
 
       <Modal show={showModal} onHide={() => {
         setShowModal(false);
-        router.push('/api/auth/signin/credentials');
+        router.push('/login');
       }} centered>
         <Modal.Header closeButton>
           <Modal.Title>Sign Up Successful</Modal.Title>
@@ -304,7 +304,7 @@ const SignUpForm: React.FC<GroupFormProps> = ({ groupId }) => {
         <Modal.Footer>
           <Button variant="primary" onClick={() => {
             setShowModal(false);
-            router.push('/api/auth/signin/credentials');
+            router.push('/login');
           }}>
             Continue to Sign In
           </Button>

@@ -49,7 +49,7 @@ export default function NavBar() {
             </Nav>
           ) : (
               <>
-                <Nav.Link href="/api/auth/signin/credentials" style={{ color: "white" }} >
+                <Nav.Link href="/login" style={{ color: "white" }} >
                   Login
                 </Nav.Link>
                 <Nav.Link as={Link} href="/signup" style={{ color: pathname === '/signup' ? "#0d6efd" : "white" }} >

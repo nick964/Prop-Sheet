@@ -10,7 +10,7 @@ const NotLoggedInComponent: React.FC = () => {
     <Container className="d-flex align-items-center justify-content-center" style={{ height: '100vh' }}>
     <Alert variant="info" className="text-center d-flex flex-column align-items-center">
       <p>You need to sign in to access this page.</p>
-      <Button variant="primary" onClick={() => router.push('/api/auth/signin/credentials')} className="mb-2 w-50">
+      <Button variant="primary" onClick={() => router.push('/login')} className="mb-2 w-50">
         Sign In
       </Button>
       <Button variant="primary" onClick={() => router.push('/signup')}  className="w-50">

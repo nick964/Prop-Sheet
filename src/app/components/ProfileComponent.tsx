@@ -36,7 +36,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profileData }) => {
   const [toastMessage, setToastMessage] = useState('');
 
   if (session?.user?.accessToken == null) {
-    router.push('/api/auth/signin/credentials');
+    router.push('/login');
     return null;
   }
 

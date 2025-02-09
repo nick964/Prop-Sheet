@@ -1,15 +1,7 @@
 "use client";
 
-import LoginForm from "../components/login-form"
+import LoginForm from "../components/LoginForm";
 
-
-// export const metadata = {
-//     title: 'Login',
-//   }
 export default function Page() {
-
-    return (
-        <LoginForm />
-        
-    )
+  return <LoginForm />;
 }

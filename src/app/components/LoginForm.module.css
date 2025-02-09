@@ -1,0 +1,188 @@
+/* LoginForm.module.css */
+.pageContainer {
+    min-height: 100vh;
+    background-color: #edf2f7;
+    padding: 2rem 0;
+  }
+  
+  .formCard {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .pageHeader {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .pageTitle {
+    font-size: 2.5rem;
+    color: #004864;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  
+  .pageSubtitle {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .formGroup {
+    margin-bottom: 1.5rem;
+  }
+  
+  .formLabel {
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .formInput {
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    transition: all 0.2s ease;
+  }
+  
+  .formInput:focus {
+    border-color: #004864;
+    box-shadow: 0 0 0 3px rgba(0, 72, 100, 0.1);
+    outline: none;
+  }
+  
+  .errorMessage {
+    color: #e53e3e;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+  
+  .submitButton {
+    background-color: #004864;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.875rem 1.5rem;
+    width: 100%;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    margin-top: 1rem;
+  }
+  
+  .submitButton:hover:not(:disabled) {
+    background-color: #003854;
+    transform: translateY(-1px);
+  }
+  
+  .submitButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .divider {
+    text-align: center;
+    margin: 2rem 0;
+    position: relative;
+  }
+  
+  .divider::before,
+  .divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 3rem);
+    height: 1px;
+    background-color: #e2e8f0;
+  }
+  
+  .divider::before {
+    left: 0;
+  }
+  
+  .divider::after {
+    right: 0;
+  }
+  
+  .dividerText {
+    background-color: white;
+    padding: 0 1rem;
+    color: #6c757d;
+    font-size: 0.95rem;
+  }
+  
+  .socialButtons {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .socialButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.875rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+  }
+  
+  .twitter {
+    background-color: #1da1f2;
+    color: white;
+  }
+  
+  .twitter:hover {
+    background-color: #1a91da;
+  }
+  
+  .google {
+    background-color: white;
+    border-color: #e2e8f0;
+    color: #2d3748;
+  }
+  
+  .google:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .signupLink {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #6c757d;
+  }
+  
+  .signupLink a {
+    color: #004864;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .signupLink a:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 768px) {
+    .pageContainer {
+      padding: 1rem;
+    }
+  
+    .formCard {
+      padding: 1.5rem;
+    }
+  
+    .pageTitle {
+      font-size: 2rem;
+    }
+  
+    .socialButtons {
+      grid-template-columns: 1fr;
+    }
+  }
